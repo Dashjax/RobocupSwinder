@@ -212,6 +212,11 @@ void val_editor(float* val, float max) {
   int num_length = String(int(trunc(max))).length() + 3;  //Does include "."
   int cursor_idx = num_length - 1;
   float pwr_factor = 0.01;  //Power of 10 to add/subtract depending on cursor location
+  bool editing_digit = false;
+
+  //Screen setup
+  lcd.setCursor(11, 1);
+  lcd.print("Done");
 
   //Enable cursor and blink at end of num
   lcd.cursor();
@@ -222,26 +227,40 @@ void val_editor(float* val, float max) {
   while(true) {
     //Read Button
     if (digitalRead(rbutton) == LOW) {
-
+      if (cursor_idx == 11) {
+        return;
+      } else {
+        editing_digit = !editing_digit;
+      }
+      delay(BUTTON_DELAY);
     }
 
     //Read Encoder
     encoder.tick();
     int dir = (int)(encoder.getDirection());
-    if (dir < 0 && cursor_idx > 0) {
-      cursor_idx--;
-      if (cursor_idx == num_length - 3) {
+    if (!editing_digit) {
+      if (dir < 0 && cursor_idx > 0) {
         cursor_idx--;
-      }
-      pwr_factor *= 10;
-    } else if (dir > 0 && cursor_idx < num_length - 1) {
-      cursor_idx++;
-      if (cursor_idx == num_length - 3) {
+        if (cursor_idx == num_length - 3) {
+          cursor_idx--;
+        } 
+        if (cursor_idx == 10) {
+          cursor_idx = num_length - 1;
+        }
+        pwr_factor *= 10;
+      } else if (dir > 0 && cursor_idx <= num_length - 1) {
         cursor_idx++;
+        if (cursor_idx == num_length - 3) {
+          cursor_idx++;
+        }
+        if (cursor_idx == num_length) {
+          cursor_idx = 11;
+        }
+        pwr_factor /= 10;
       }
-      pwr_factor /= 10;
+    } else { //EDITING DIGIT
+    
     }
-
     //Update Cursor
     lcd.setCursor(cursor_idx, 1);
   }
