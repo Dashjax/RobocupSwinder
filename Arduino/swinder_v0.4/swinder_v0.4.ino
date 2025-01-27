@@ -242,6 +242,7 @@ void val_editor(float* val, float max) {
     //Read Button
     if (digitalRead(rbutton) == LOW) {
       if (cursor_idx == 11) {
+        lcd.noCursor();
         return; //Exit editor
       } else {
         editing_digit = !editing_digit; //Begin editing a digit
@@ -296,15 +297,29 @@ void val_editor(float* val, float max) {
 }
 
 void confirm_screen() {
+  //Local vars
+  int cursor_idx = 0;
   //Screen setup
   lcd.clear();
   lcd.setCursor(0, 0);
   lcd.print("Begin Process?");
   lcd.setCursor(0, 1);
   lcd.print("Y/N");
+  lcd.cursor();
   lcd.blink();
 
-  
+  while (true) {}
+    //Read Button
+    if (digitalRead(rbutton) == LOW) {
+      if (cursor_idx == 0) {
+        lcd.noBlink();
+        lcd.noCursor();
+        return;
+      } else {
+        val_select();
+      }
+    }
+  }
 }
 
 void step_coil() {
