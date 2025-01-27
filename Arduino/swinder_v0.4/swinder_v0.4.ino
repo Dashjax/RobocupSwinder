@@ -220,7 +220,30 @@ void val_editor(float* val, float max) {
   delay(BUTTON_DELAY);
 
   while(true) {
-    
+    //Read Button
+    if (digitalRead(rbutton) == LOW) {
+
+    }
+
+    //Read Encoder
+    encoder.tick();
+    int dir = (int)(encoder.getDirection());
+    if (dir < 0 && cursor_idx > 0) {
+      cursor_idx--;
+      if (cursor_idx == num_length - 3) {
+        cursor_idx--;
+      }
+      pwr_factor *= 10;
+    } else if (dir > 0 && cursor_idx < num_length - 1) {
+      cursor_idx++;
+      if (cursor_idx == num_length - 3) {
+        cursor_idx++;
+      }
+      pwr_factor /= 10;
+    }
+
+    //Update Cursor
+    lcd.setCursor(cursor_idx, 1);
   }
 }
 
