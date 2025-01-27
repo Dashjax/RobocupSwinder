@@ -319,6 +319,15 @@ void confirm_screen() {
         val_select();
       }
     }
+
+    //Read encoder
+    encoder.tick();
+    int dir = (int)(encoder.getDirection());
+    if (dir > 0 && cursor_idx == 0) {
+      cursor_idx = 2;
+    } else if (dir < 0 && cursor_idx == 2) {
+      cursor_idx = 0;
+    }
   }
 }
 
