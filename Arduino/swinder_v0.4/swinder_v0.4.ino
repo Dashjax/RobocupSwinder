@@ -149,9 +149,18 @@ void val_select() {
   while(true) {
     //Read Button
     if (digitalRead(rbutton) == LOW) {
-      Serial.println("Select!");
+      switch (screen_idx) {
+        case 0:
+          val_editor(&inductance, MAX_INDUCTANCE);
+          break;
+        case 1:
+          val_editor(&length, MAX_LENGTH);
+          break;
+        case 2:
+          val_editor(&radius, MAX_RADIUS);
+          break;
+      }
       delay(BUTTON_DELAY);
-      break;
     }
 
     //Read Encoder
@@ -189,7 +198,7 @@ void val_select() {
   }
 }
 
-void val_editor() {
+void val_editor(float* val, float max) {
 
 }
 
