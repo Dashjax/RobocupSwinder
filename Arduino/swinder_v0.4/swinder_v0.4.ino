@@ -134,6 +134,9 @@ Screens:
   2: Length
   3: Radius
   4: Confirmation
+-Rotate Clockwise: Go down screen
+-Rotate Counterclockwise: Go up screen
+-Press: Begin editing number/confirm and exit
 */
 void val_select() {
   //Local vars
