@@ -128,11 +128,21 @@ void choose_preset() {
 }
 
 /*
-
+Select which value to edit/confirm and start
+Screens:
+  1: Inductance
+  2: Length
+  3: Radius
+  4: Confirmation
 */
 void val_select() {
+  //Local vars
   int screen_idx = 0;
+
+  //Screen setup
   lcd.clear();
+
+  //Selection loop
   while(true) {
     //Read Button
     if (digitalRead(rbutton) == LOW) {
