@@ -208,7 +208,20 @@ void val_select() {
 }
 
 void val_editor(float* val, float max) {
+  //Setup vars
+  int num_length = String(int(trunc(max))).length() + 3;  //Does include "."
+  int cursor_idx = num_length - 1;
+  float pwr_factor = 0.01;  //Power of 10 to add/subtract depending on cursor location
 
+  //Enable cursor and blink at end of num
+  lcd.cursor();
+  lcd.blink();
+  lcd.setCursor(cursor_idx, 1);
+  delay(BUTTON_DELAY);
+
+  while(true) {
+    
+  }
 }
 
 void step_coil() {
