@@ -153,7 +153,7 @@ void val_select() {
       delay(BUTTON_DELAY);
       break;
     }
-    
+
     //Read Encoder
     encoder.tick();
     int dir = (int)(encoder.getDirection());
@@ -203,4 +203,23 @@ void step_feed() {
   delay(1);
   digitalWrite(feed_motor_step, LOW);
   delay(1);
+}
+
+/*
+Formats numbers to have the right amount of leading zeros for display
+num: number to be formatted
+max: maximum value of num
+*/
+String format_val(float num, float max) {
+  unsigned int length = String(int(trunc(max))).length() + 3;
+  String s = "";
+  String n = String(num);
+  for (unsigned int i = 0; i < length; i++) {
+    if (i < length - n.length()) {
+      s += "0";
+    } else {
+      s += n[i - (length - n.length())];
+    }
+  }
+  return s;
 }
