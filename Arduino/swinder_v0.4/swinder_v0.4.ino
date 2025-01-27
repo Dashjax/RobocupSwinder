@@ -296,6 +296,14 @@ void val_editor(float* val, float max) {
   }
 }
 
+/*
+Final check before starting winding process
+Y starts process
+N returns to val select
+-Rotate Clockwise: Move right
+-Rotate Counterclockwise: Move left
+-Press: Select choice
+*/
 void confirm_screen() {
   //Local vars
   int cursor_idx = 0;
@@ -314,7 +322,7 @@ void confirm_screen() {
       if (cursor_idx == 0) {
         lcd.noBlink();
         lcd.noCursor();
-        return;
+        return; //Exit to main loop
       } else {
         val_select();
       }
