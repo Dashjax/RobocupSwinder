@@ -1,6 +1,6 @@
-#include <LiquidCrystal.h>
-#include <DRV8825.h>
-#include <RotaryEncoder.h>
+  #include <LiquidCrystal.h>
+  #include <DRV8825.h>
+  #include <RotaryEncoder.h>
 
 //Pins setup
 const int lcd_rs = 0, lcd_en = 1, lcd_d4 = 2, lcd_d5 = 3, lcd_d6 = 4, lcd_d7 = 5;
@@ -88,7 +88,9 @@ Select Preset Screen
 -Press: Select Preset
 */
 void choose_preset() {
+  //Local vars
   int cursor_idx = 1;
+
   //Screen setup
   lcd.clear();
   lcd.setCursor(0, 0);
@@ -98,6 +100,7 @@ void choose_preset() {
   lcd.setCursor(cursor_idx, 1);
   lcd.cursor();
   lcd.blink();
+
   //Selection loop
   while (true) {
     //Read Button
@@ -106,20 +109,19 @@ void choose_preset() {
       delay(BUTTON_DELAY);
       break;
     }
+
     //Read Encoder
-    static int pos = 0;
     encoder.tick();
-    int newPos = encoder.getPosition();
-    if (pos != newPos) {
-      if (newPos > pos && cursor_idx < 9) {
-        cursor_idx += 2;
-      } else if (newPos < pos && cursor_idx > 1) {
-        cursor_idx -= 2;
-      }
-      pos = newPos;
+    int dir = (int)(encoder.getDirection());
+    if (dir > 0 && cursor_idx < 9) {
+      cursor_idx += 2;
+    } else if (dir < 0 && cursor_idx > 1) {
+      cursor_idx -= 2;
     }
+
     //Update cursor
     lcd.setCursor(cursor_idx, 1);
+
     //Stability Delay
     delay(1);
   }
