@@ -225,7 +225,7 @@ max: Maximum of related value
 -Press: Start editing digit/Finish editing digit/Exit
 */
 void val_editor(float* val, float max) {
-  //Setup vars
+  //Local vars
   int num_length = String(int(trunc(max))).length() + 3;  //Does include "."
   int cursor_idx = num_length - 1;
   float pwr_factor = 0.01;  //Power of 10 to add/subtract depending on cursor location
@@ -344,6 +344,10 @@ void confirm_screen() {
     //Stability Delay
     delay(2);
   }
+}
+
+void spin() {
+  
 }
 
 void step_coil() {
