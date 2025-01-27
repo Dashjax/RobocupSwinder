@@ -316,7 +316,7 @@ void confirm_screen() {
   lcd.cursor();
   lcd.blink();
 
-  while (true) {}
+  while (true) {
     //Read Button
     if (digitalRead(rbutton) == LOW) {
       if (cursor_idx == 0) {
