@@ -292,6 +292,10 @@ void val_editor(float* val, float max) {
   }
 }
 
+void confirm_screen() {
+  
+}
+
 void step_coil() {
   digitalWrite(coil_motor_step, HIGH);
   delay(1);
