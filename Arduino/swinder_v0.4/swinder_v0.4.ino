@@ -67,6 +67,9 @@ void loop() {
   val_select();
 }
 
+/*
+Basic animation to run on startup
+*/
 void startup_animation() {
   int d = 100;
   String s = "Robojackets!";
@@ -77,8 +80,8 @@ void startup_animation() {
     delay(d);
   }
   lcd.setCursor(5, 1);
-  lcd.print("V0.3");
-  delay(800);
+  lcd.print("V0.4");
+  delay(500);
 }
 
 /*
