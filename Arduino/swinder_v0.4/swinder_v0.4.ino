@@ -169,19 +169,19 @@ void val_select() {
         lcd.setCursor(0, 0);
         lcd.print("Inductance (mH)");
         lcd.setCursor(0, 1);
-        lcd.print("2");
+        lcd.print(format_val(inductance, MAX_INDUCTANCE));
         break;
       case 1: //Length (cm)
         lcd.setCursor(0, 0);
         lcd.print("Length (cm)");
         lcd.setCursor(0, 1);
-        lcd.print("2");
+        lcd.print(format_val(length, MAX_LENGTH));
         break;
       case 2: //Radius (cm)
         lcd.setCursor(0, 0);
         lcd.print("Radius (cm)");
         lcd.setCursor(0, 1);
-        lcd.print("2");
+        lcd.print(format_val(radius, MAX_RADIUS));
         break;
     }
   }
