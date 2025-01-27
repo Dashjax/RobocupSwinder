@@ -159,6 +159,9 @@ void val_select() {
         case 2:
           val_editor(&radius, MAX_RADIUS);
           break;
+        case 3:
+          return;
+        break;
       }
       delay(BUTTON_DELAY);
     }
@@ -166,7 +169,7 @@ void val_select() {
     //Read Encoder
     encoder.tick();
     int dir = (int)(encoder.getDirection());
-    if (dir > 0 && screen_idx < 2) {
+    if (dir > 0 && screen_idx < 3) {
       screen_idx += 1;
       lcd.clear();
     } else if (dir < 0 && screen_idx > 0) {
@@ -194,6 +197,12 @@ void val_select() {
         lcd.setCursor(0, 1);
         lcd.print(format_val(radius, MAX_RADIUS));
         break;
+      case 3: //Confirmation Screen
+        lcd.setCursor(0, 0);
+        lcd.print("Turns: ");
+        lcd.print(num_turns);
+        lcd.setCursor(0, 1);
+        lcd.print("Confirm");
     }
   }
 }
