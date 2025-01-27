@@ -159,8 +159,10 @@ void val_select() {
     int dir = (int)(encoder.getDirection());
     if (dir > 0 && screen_idx < 2) {
       screen_idx += 1;
+      lcd.clear();
     } else if (dir < 0 && screen_idx > 0) {
       screen_idx -= 1;
+      lcd.clear();
     }
 
     //Screens
