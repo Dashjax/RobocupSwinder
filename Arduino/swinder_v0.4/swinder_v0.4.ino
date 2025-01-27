@@ -210,6 +210,9 @@ void val_select() {
         lcd.print("Confirm");
         break;
     }
+
+    //Stability Delay
+    delay(2);
   }
 }
 
@@ -337,7 +340,7 @@ void confirm_screen() {
     } else if (dir < 0 && cursor_idx == 2) {
       cursor_idx = 0;
     }
-    
+
     //Stability Delay
     delay(2);
   }
