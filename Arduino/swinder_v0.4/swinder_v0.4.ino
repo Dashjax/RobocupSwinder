@@ -210,7 +210,12 @@ void val_select() {
 }
 
 /*
-
+Edit value currently on screen
+val: Value to be edited
+max: Maximum of related value
+-Rotate Clockwise: Move right/Increase value depending on editing_val
+-Rotate Counterclockwise: Move left/Decrease value depending on editing_val
+-Press: Start editing digit/Finish editing digit/Exit
 */
 void val_editor(float* val, float max) {
   //Setup vars
@@ -228,14 +233,15 @@ void val_editor(float* val, float max) {
   lcd.noBlink();
   lcd.setCursor(cursor_idx, 1);
   delay(BUTTON_DELAY);
-
+  
+  //Editing loop
   while(true) {
     //Read Button
     if (digitalRead(rbutton) == LOW) {
       if (cursor_idx == 11) {
-        return;
+        return; //Exit editor
       } else {
-        editing_digit = !editing_digit;
+        editing_digit = !editing_digit; //Begin editing a digit
         if (editing_digit) {
           lcd.blink();
         } else {
@@ -248,27 +254,27 @@ void val_editor(float* val, float max) {
     //Read Encoder
     encoder.tick();
     int dir = (int)(encoder.getDirection());
-    if (!editing_digit) {
+    if (!editing_digit) { //Selecting digit
       if (dir < 0 && cursor_idx > 0) {
         cursor_idx--;
-        if (cursor_idx == num_length - 3) {
+        if (cursor_idx == num_length - 3) { //Jump decimal
           cursor_idx--;
         } 
-        if (cursor_idx == 10) {
+        if (cursor_idx == 10) { //Jump back from done
           cursor_idx = num_length - 1;
         }
         pwr_factor *= 10;
       } else if (dir > 0 && cursor_idx <= num_length - 1) {
         cursor_idx++;
-        if (cursor_idx == num_length - 3) {
+        if (cursor_idx == num_length - 3) { //Jump Decimal
           cursor_idx++;
         }
-        if (cursor_idx == num_length) {
+        if (cursor_idx == num_length) { //Jump to done
           cursor_idx = 11;
         }
         pwr_factor /= 10;
       }
-    } else { //EDITING DIGIT
+    } else { //Editing Digit
       if (dir > 0 && *val + pwr_factor <= max) {
         *val += pwr_factor;
       } else if (dir < 0 && *val - pwr_factor >= 0) {
