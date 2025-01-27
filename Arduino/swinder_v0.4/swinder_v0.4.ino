@@ -202,6 +202,7 @@ void val_select() {
         lcd.print(format_val(radius, MAX_RADIUS));
         break;
       case 3: //Confirmation Screen
+        num_turns = calc_turns(inductance, length, radius);
         lcd.setCursor(0, 0);
         lcd.print("Turns: ");
         lcd.print(num_turns);
@@ -370,4 +371,18 @@ String format_val(float num, float max) {
     }
   }
   return s;
+}
+
+/*
+Calculates the number of turns needed for the given length, radius, and inductance
+i: inductance of wanted solanoid
+l: length of solanoid
+r: radius of solanoid
+*/
+int calc_turns(float i, float l, float r) {
+  //Value Correction
+  l *= 0.01; //cm to m
+  r *= 0.01; //cm to m
+  i *= 0.001; //mH to H
+  return round(sqrt((l * i) / ((pow(r, 2) * pi) * mu)));
 }
