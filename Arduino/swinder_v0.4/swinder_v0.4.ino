@@ -163,6 +163,7 @@ void val_select() {
           return;
         break;
       }
+      lcd.clear();
       delay(BUTTON_DELAY);
     }
 
@@ -203,10 +204,14 @@ void val_select() {
         lcd.print(num_turns);
         lcd.setCursor(0, 1);
         lcd.print("Confirm");
+        break;
     }
   }
 }
 
+/*
+
+*/
 void val_editor(float* val, float max) {
   //Setup vars
   int num_length = String(int(trunc(max))).length() + 3;  //Does include "."
@@ -218,9 +223,9 @@ void val_editor(float* val, float max) {
   lcd.setCursor(11, 1);
   lcd.print("Done");
 
-  //Enable cursor and blink at end of num
+  //Enable cursor at end of num
   lcd.cursor();
-  lcd.blink();
+  lcd.noBlink();
   lcd.setCursor(cursor_idx, 1);
   delay(BUTTON_DELAY);
 
@@ -231,6 +236,11 @@ void val_editor(float* val, float max) {
         return;
       } else {
         editing_digit = !editing_digit;
+        if (editing_digit) {
+          lcd.blink();
+        } else {
+          lcd.noBlink();
+        }
       }
       delay(BUTTON_DELAY);
     }
@@ -259,10 +269,20 @@ void val_editor(float* val, float max) {
         pwr_factor /= 10;
       }
     } else { //EDITING DIGIT
-    
+      if (dir > 0 && *val + pwr_factor <= max) {
+        *val += pwr_factor;
+      } else if (dir < 0 && *val - pwr_factor >= 0) {
+        *val -= pwr_factor;
+      }
     }
-    //Update Cursor
+    
+    //Update Screen
+    lcd.setCursor(0, 1);
+    lcd.print(format_val(*val, max));
     lcd.setCursor(cursor_idx, 1);
+    
+    //Stability Delay
+    delay(2);
   }
 }
 
