@@ -153,18 +153,16 @@ void val_select() {
       delay(BUTTON_DELAY);
       break;
     }
+    
     //Read Encoder
-    static int pos = 0;
     encoder.tick();
-    int newPos = encoder.getPosition();
-    if (pos != newPos) {
-      if (newPos > pos && screen_idx < 2) {
-        screen_idx += 1;
-      } else if (newPos < pos && screen_idx > 0) {
-        screen_idx -= 1;
-      }
-      pos = newPos;
+    int dir = (int)(encoder.getDirection());
+    if (dir > 0 && screen_idx < 2) {
+      screen_idx += 1;
+    } else if (dir < 0 && screen_idx > 0) {
+      screen_idx -= 1;
     }
+
     //Screens
     switch (screen_idx) {
       case 0: //Inductance (mH)
