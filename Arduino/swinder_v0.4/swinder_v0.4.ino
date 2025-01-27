@@ -296,6 +296,14 @@ void val_editor(float* val, float max) {
 }
 
 void confirm_screen() {
+  //Screen setup
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Begin Process?");
+  lcd.setCursor(0, 1);
+  lcd.print("Y/N");
+  lcd.blink();
+
   
 }
 
