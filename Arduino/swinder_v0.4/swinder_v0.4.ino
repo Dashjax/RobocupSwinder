@@ -360,11 +360,14 @@ void confirm_screen() {
 
 void spin() {
   //Local vals
+  int turns_remaining = num_turns;
 
   //Screen setup
   lcd.clear();
   lcd.setCursor(0, 0);
-  lcd.print("Zeroing...");
+  lcd.print("Zeroing:");
+  lcd.setCursor(0, 1);
+  lcd.print("Please Wait...");
 
   //Set starting direction
   digitalWrite(coil_motor_dir, HIGH);
@@ -382,7 +385,15 @@ void spin() {
     }
   }
 
-  
+  //Process screen setup
+  lcd.setCursor(0, 1);
+  lcd.print("OK!             ");
+  delay(1000);
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Turns Remaining:");
+  lcd.setCursor(0, 1);
+  lcd.print(turns_remaining);
   
 }
 
