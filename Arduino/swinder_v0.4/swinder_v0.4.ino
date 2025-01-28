@@ -361,6 +361,11 @@ void confirm_screen() {
 void spin() {
   //Local vals
 
+  //Screen setup
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Zeroing...");
+
   //Set starting direction
   digitalWrite(coil_motor_dir, HIGH);
   digitalWrite(feed_motor_dir, LOW);
@@ -376,6 +381,8 @@ void spin() {
       delay(MOTOR_DELAY);
     }
   }
+
+  
   
 }
 
