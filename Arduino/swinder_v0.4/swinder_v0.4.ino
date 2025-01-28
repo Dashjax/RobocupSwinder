@@ -184,37 +184,6 @@ void val_select() {
 
   //Selection loop
   while(true) {
-    //Read Button
-    if (digitalRead(rbutton) == LOW) {
-      delay(BUTTON_DELAY);
-      switch (screen_idx) {
-        case 0:
-          val_editor(&inductance, MAX_INDUCTANCE);
-          break;
-        case 1:
-          val_editor(&length, MAX_LENGTH);
-          break;
-        case 2:
-          val_editor(&radius, MAX_RADIUS);
-          break;
-        case 3:
-          delay(BUTTON_DELAY);
-          return;
-        break;
-      }
-      lcd.clear();
-    }
-
-    //Read Encoder
-    encoder.tick();
-    int dir = (int)(encoder.getDirection());
-    if (dir > 0 && screen_idx < 3) {
-      screen_idx += 1;
-      lcd.clear();
-    } else if (dir < 0 && screen_idx > 0) {
-      screen_idx -= 1;
-      lcd.clear();
-    }
 
     //Screens
     switch (screen_idx) {
@@ -244,6 +213,37 @@ void val_select() {
         lcd.setCursor(0, 1);
         lcd.print("Confirm");
         break;
+    }
+
+    //Read Button
+    if (digitalRead(rbutton) == LOW) {
+      delay(BUTTON_DELAY);
+      switch (screen_idx) {
+        case 0:
+          val_editor(&inductance, MAX_INDUCTANCE);
+          break;
+        case 1:
+          val_editor(&length, MAX_LENGTH);
+          break;
+        case 2:
+          val_editor(&radius, MAX_RADIUS);
+          break;
+        case 3:
+          return;
+        break;
+      }
+      lcd.clear();
+    }
+
+    //Read Encoder
+    encoder.tick();
+    int dir = (int)(encoder.getDirection());
+    if (dir > 0 && screen_idx < 3) {
+      screen_idx += 1;
+      lcd.clear();
+    } else if (dir < 0 && screen_idx > 0) {
+      screen_idx -= 1;
+      lcd.clear();
     }
 
     //Stability Delay
