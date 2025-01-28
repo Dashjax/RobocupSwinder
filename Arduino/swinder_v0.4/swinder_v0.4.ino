@@ -65,6 +65,7 @@ void loop() {
   startup_animation();
   choose_preset();
   val_select();
+  confirm_screen();
 }
 
 /*
@@ -108,9 +109,10 @@ void choose_preset() {
   while (true) {
     //Read Button
     if (digitalRead(rbutton) == LOW) {
-      Serial.println("Select!");
       delay(BUTTON_DELAY);
-      break;
+      lcd.noCursor();
+      lcd.noBlink();
+      return;
     }
 
     //Read Encoder
@@ -152,6 +154,7 @@ void val_select() {
   while(true) {
     //Read Button
     if (digitalRead(rbutton) == LOW) {
+      delay(BUTTON_DELAY);
       switch (screen_idx) {
         case 0:
           val_editor(&inductance, MAX_INDUCTANCE);
@@ -163,11 +166,11 @@ void val_select() {
           val_editor(&radius, MAX_RADIUS);
           break;
         case 3:
+          delay(BUTTON_DELAY);
           return;
         break;
       }
       lcd.clear();
-      delay(BUTTON_DELAY);
     }
 
     //Read Encoder
@@ -239,12 +242,12 @@ void val_editor(float* val, float max) {
   lcd.cursor();
   lcd.noBlink();
   lcd.setCursor(cursor_idx, 1);
-  delay(BUTTON_DELAY);
   
   //Editing loop
   while(true) {
     //Read Button
     if (digitalRead(rbutton) == LOW) {
+      delay(BUTTON_DELAY);
       if (cursor_idx == 11) {
         lcd.noCursor();
         lcd.noBlink();
@@ -257,7 +260,6 @@ void val_editor(float* val, float max) {
           lcd.noBlink();
         }
       }
-      delay(BUTTON_DELAY);
     }
 
     //Read Encoder
@@ -321,11 +323,13 @@ void confirm_screen() {
   lcd.print("Y/N");
   lcd.cursor();
   lcd.blink();
+  lcd.setCursor(0, 1);
 
   //Loop till confirmation
   while (true) {
     //Read Button
     if (digitalRead(rbutton) == LOW) {
+      delay(BUTTON_DELAY);
       if (cursor_idx == 0) {
         lcd.noBlink();
         lcd.noCursor();
@@ -343,6 +347,9 @@ void confirm_screen() {
     } else if (dir < 0 && cursor_idx == 2) {
       cursor_idx = 0;
     }
+
+    //Update cursor
+    lcd.setCursor(cursor_idx, 1);
 
     //Stability Delay
     delay(2);
