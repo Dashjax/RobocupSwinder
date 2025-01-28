@@ -112,6 +112,36 @@ void choose_preset() {
     //Read Button
     if (digitalRead(rbutton) == LOW) {
       delay(BUTTON_DELAY);
+      
+      //Assign presets
+      switch (cursor_idx) {
+        case 1:
+          inductance = 40;
+          length = 5;
+          radius = 0.5;
+          break;
+        case 3:
+          inductance = 80;
+          length = 5;
+          radius = 0.5;
+          break;
+        case 5:
+          inductance = 40;
+          length = 3;
+          radius = 0.5;
+          break;
+        case 7:
+          inductance = 80;
+          length = 3;
+          radius = 0.5;
+          break;
+        default:
+          inductance = 0;
+          length = 0;
+          radius = 0;
+      }
+      
+      //Reset and return
       lcd.noCursor();
       lcd.noBlink();
       return;
@@ -332,9 +362,9 @@ void confirm_screen() {
     //Read Button
     if (digitalRead(rbutton) == LOW) {
       delay(BUTTON_DELAY);
+      lcd.noBlink();
+      lcd.noCursor();
       if (cursor_idx == 0) {
-        lcd.noBlink();
-        lcd.noCursor();
         return; //Exit to main loop
       } else {
         val_select();
