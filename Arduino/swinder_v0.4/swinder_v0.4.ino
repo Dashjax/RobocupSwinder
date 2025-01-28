@@ -312,6 +312,7 @@ N returns to val select
 void confirm_screen() {
   //Local vars
   int cursor_idx = 0;
+
   //Screen setup
   lcd.clear();
   lcd.setCursor(0, 0);
@@ -321,6 +322,7 @@ void confirm_screen() {
   lcd.cursor();
   lcd.blink();
 
+  //Loop till confirmation
   while (true) {
     //Read Button
     if (digitalRead(rbutton) == LOW) {
@@ -371,16 +373,20 @@ num: number to be formatted
 max: maximum value of num
 */
 String format_val(float num, float max) {
-  unsigned int length = String(int(trunc(max))).length() + 3;
+  //Local vars
+  unsigned int length = String(int(trunc(max))).length() + 3; //Total length of val as str
   String s = "";
   String n = String(num);
+
+  //Adds leading zeros as needed to match expected length
   for (unsigned int i = 0; i < length; i++) {
     if (i < length - n.length()) {
       s += "0";
     } else {
-      s += n[i - (length - n.length())];
+      s += n[i - (length - n.length())]; //!! UPDATE TO FINISH EARLY !!
     }
   }
+
   return s;
 }
 
