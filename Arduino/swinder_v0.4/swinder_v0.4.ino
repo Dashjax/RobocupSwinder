@@ -375,6 +375,7 @@ max: maximum value of num
 String format_val(float num, float max) {
   //Local vars
   unsigned int length = String(int(trunc(max))).length() + 3; //Total length of val as str
+  length = (length > 10 ? 10 : length); //Ensure length is never greater than 10
   String s = "";
   String n = String(num);
 
