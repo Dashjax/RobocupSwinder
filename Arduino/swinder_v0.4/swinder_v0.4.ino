@@ -247,6 +247,7 @@ void val_editor(float* val, float max) {
     if (digitalRead(rbutton) == LOW) {
       if (cursor_idx == 11) {
         lcd.noCursor();
+        lcd.noBlink();
         return; //Exit editor
       } else {
         editing_digit = !editing_digit; //Begin editing a digit
