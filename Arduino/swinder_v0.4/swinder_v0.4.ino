@@ -19,6 +19,7 @@ RotaryEncoder encoder(ra, rb, RotaryEncoder::LatchMode::FOUR3);
 const float pi = 3.14159;
 const float mu = 4 * pi * pow(10, -7);
 const int BUTTON_DELAY = 200;
+const int MOTOR_DELAY = 1;
 const float MAX_LENGTH = 20;              //cm
 const float MAX_INDUCTANCE = 10000;       //mH
 const float MAX_RADIUS = 5;               //cm
@@ -66,6 +67,7 @@ void loop() {
   choose_preset();
   val_select();
   confirm_screen();
+  spin();
 }
 
 /*
@@ -357,6 +359,23 @@ void confirm_screen() {
 }
 
 void spin() {
+  //Local vals
+
+  //Set starting direction
+  digitalWrite(coil_motor_dir, HIGH);
+  digitalWrite(feed_motor_dir, LOW);
+
+  //Zero carriage
+  while (true) {
+    if (digitalRead(limit_switch) == HIGH) {
+      break;
+    } else {
+      digitalWrite(feed_motor_step, HIGH);
+      delay(MOTOR_DELAY);
+      digitalWrite(feed_motor_step, LOW);
+      delay(MOTOR_DELAY);
+    }
+  }
   
 }
 
