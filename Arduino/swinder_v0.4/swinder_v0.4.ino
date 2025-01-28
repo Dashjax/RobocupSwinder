@@ -360,7 +360,10 @@ void confirm_screen() {
 
 void spin() {
   //Local vals
-  int num_steps_coil = 1010 * FULL_ROTATION;
+  int num_step_coil_const = 1010 * FULL_ROTATION;
+  int num_step_coil = num_step_coil_const;
+  int percent_complete = (100 * (num_step_coil_const - num_step_coil)) / num_step_coil_const;
+  int new_percent_complete = percent_complete;
 
   //Screen setup
   lcd.clear();
@@ -385,25 +388,43 @@ void spin() {
     }
   }
 
+  //Reverse carriage direction
+  digitalWrite(feed_motor_dir, HIGH);
+
   //Process screen setup
   lcd.setCursor(0, 1);
   lcd.print("OK!             ");
   delay(1000);
   lcd.clear();
   lcd.setCursor(0, 0);
-  lcd.print("Turns Remaining:");
+  lcd.print("Percent Complete:");
+  lcd.setCursor(0, 1);
+  lcd.print(percent_complete);
+  lcd.print("%");
 
-  while (num_steps_coil > 0) { //Process loop
+  while (num_step_coil > 0) { //Process loop
+    //Read Button
+    if (digitalRead(rbutton) == LOW) {
+      delay(BUTTON_DELAY);
+      pause();
+    }
 
     //Decrement steps
-    num_steps_coil -= 1;
+    num_step_coil -= 1;
 
     //Update Screen
-    lcd.setCursor(0, 1);
-    lcd.print(num_steps_coil / FULL_ROTATION);
-    lcd.print("     ");
+    new_percent_complete = (100 * (num_step_coil_const - num_step_coil)) / num_step_coil_const;
+    if (percent_complete != new_percent_complete) {
+      percent_complete = new_percent_complete;
+      lcd.setCursor(0, 1);
+      lcd.print(percent_complete);
+      lcd.print("%");
+    }
   }
-  
+}
+
+void pause() {
+  delay(1000);
 }
 
 void step_coil() {
