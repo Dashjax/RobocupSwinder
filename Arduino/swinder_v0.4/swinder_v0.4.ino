@@ -360,7 +360,7 @@ void confirm_screen() {
 
 void spin() {
   //Local vals
-  int turns_remaining = num_turns;
+  int num_steps_coil = 1010 * FULL_ROTATION;
 
   //Screen setup
   lcd.clear();
@@ -392,8 +392,17 @@ void spin() {
   lcd.clear();
   lcd.setCursor(0, 0);
   lcd.print("Turns Remaining:");
-  lcd.setCursor(0, 1);
-  lcd.print(turns_remaining);
+
+  while (num_steps_coil > 0) { //Process loop
+
+    //Decrement steps
+    num_steps_coil -= 1;
+
+    //Update Screen
+    lcd.setCursor(0, 1);
+    lcd.print(num_steps_coil / FULL_ROTATION);
+    lcd.print("     ");
+  }
   
 }
 

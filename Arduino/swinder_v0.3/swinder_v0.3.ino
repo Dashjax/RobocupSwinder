@@ -112,7 +112,7 @@ void loop() {
 
     //Set starting direction
     digitalWrite(coil_motor_dir, HIGH);
-    digitalWrite(feed_motor_dir, LOW);
+    digitalWrite(feed_motor_dir, LOW);  
 
     //Zero carriage
     bool limit = false;
