@@ -65,9 +65,6 @@ void setup() {
 void loop() {
   startup_animation();
   choose_preset();
-  val_select();
-  confirm_screen();
-  spin();
 }
 
 /*
@@ -141,10 +138,10 @@ void choose_preset() {
           radius = 0;
       }
       
-      //Reset and return
+      //Reset and go to val select
       lcd.noCursor();
       lcd.noBlink();
-      return;
+      val_select();
     }
 
     //Read Encoder
@@ -229,7 +226,7 @@ void val_select() {
           val_editor(&radius, MAX_RADIUS);
           break;
         case 3:
-          return;
+          confirm_screen();
         break;
       }
       lcd.clear();
@@ -365,9 +362,9 @@ void confirm_screen() {
       lcd.noBlink();
       lcd.noCursor();
       if (cursor_idx == 0) {
-        return; //Exit to main loop
+        spin(); //Go to spin
       } else {
-        val_select();
+        val_select(); //Return to val select
       }
     }
 
