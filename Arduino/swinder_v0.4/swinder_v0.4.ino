@@ -395,6 +395,7 @@ void spin() {
   int new_percent_complete = percent_complete;
   float carriage_pos = -(OFFSET + PADDING);
   int carriage_factor = 1;
+  int step_count = 0;
 
   //Screen setup
   lcd.clear();
@@ -412,10 +413,7 @@ void spin() {
     if (digitalRead(limit_switch) == HIGH) {
       break;
     } else {
-      digitalWrite(feed_motor_step, HIGH);
-      delay(MOTOR_DELAY);
-      digitalWrite(feed_motor_step, LOW);
-      delay(MOTOR_DELAY);
+      step_feed();
     }
   }
 
@@ -428,6 +426,7 @@ void spin() {
      step_feed();
      carriage_pos += FEED_PER_STEP;
   }
+  carriage_pos = 0;
 
   //Process screen setup
   lcd.setCursor(0, 1);
@@ -450,17 +449,25 @@ void spin() {
     //Reverse carriage
     if (carriage_pos > length - PADDING) {
       digitalWrite(feed_motor_dir, LOW);
-      carriage_factor *= -1;
+      carriage_factor = -1;
     }
     if (carriage_pos < PADDING) {
       digitalWrite(feed_motor_dir, HIGH);
-      carriage_factor -= 1;
+      carriage_factor = 1;
     }
 
+    //Drive Carriage
+    if (step_count % COIL_STEP_PER_FEED_STEP == 0) {
+      step_both();
+      carriage_pos += FEED_PER_STEP * carriage_factor;
+    } else {
+      //Drive coil
+      step_coil();
+    }
 
     //Decrement steps
     num_step_coil -= 1;
-    carriage_pos += FEED_PER_STEP * carriage_factor;
+    step_count += 1;
 
     //Update Screen
     new_percent_complete = (100 * (num_step_coil_const - num_step_coil)) / num_step_coil_const;
@@ -491,6 +498,14 @@ void step_feed() {
   delay(MOTOR_DELAY);
 }
 
+void step_both() {
+  digitalWrite(feed_motor_step, HIGH);
+  digitalWrite(coil_motor_step, HIGH);
+  delay(MOTOR_DELAY);
+  digitalWrite(feed_motor_step, LOW);
+  digitalWrite(coil_motor_step, LOW);
+  delay(MOTOR_DELAY);
+}
 /*
 Formats numbers to have the right amount of leading zeros for display
 num: number to be formatted
