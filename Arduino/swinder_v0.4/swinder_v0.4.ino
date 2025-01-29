@@ -434,6 +434,12 @@ void spin() {
     if (digitalRead(rbutton) == LOW) {
       delay(BUTTON_DELAY);
       pause();
+      lcd.clear();
+      lcd.setCursor(0, 0);
+      lcd.print("Percent Complete:");
+      lcd.setCursor(0, 1);
+      lcd.print(percent_complete);
+      lcd.print("%");
     }
 
     //Decrement steps
@@ -459,9 +465,7 @@ void pause() {
   lcd.setCursor(0, 0);
   lcd.print("Paused");
   lcd.setCursor(0, 1);
-  lcd.print("Resume");
-  lcd.setCursor(8, 1);
-  lcd.print("Restart");
+  lcd.print("Resume  Restart");
   lcd.cursor();
   lcd.blink();
   lcd.setCursor(0, 1);
