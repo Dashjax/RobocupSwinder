@@ -444,6 +444,12 @@ void spin() {
     if (digitalRead(rbutton) == LOW) {
       delay(BUTTON_DELAY);
       pause();
+      lcd.clear();
+      lcd.setCursor(0, 0);
+      lcd.print("Percent Complete:");
+      lcd.setCursor(0, 1);
+      lcd.print(percent_complete);
+      lcd.print("%");
     }
 
     //Reverse carriage
@@ -481,7 +487,48 @@ void spin() {
 }
 
 void pause() {
-  delay(1000);
+  //Local vars
+  int cursor_idx = 0;
+
+  //Screen setup
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Paused");
+  lcd.setCursor(0, 1);
+  lcd.print("Resume  Restart");
+  lcd.cursor();
+  lcd.blink();
+  lcd.setCursor(0, 1);
+
+  //Loop till confirmation
+  while (true) {
+    //Read Button
+    if (digitalRead(rbutton) == LOW) {
+      delay(BUTTON_DELAY);
+      lcd.noBlink();
+      lcd.noCursor();
+      if (cursor_idx == 0) {
+        return; //Go back to spin and continue
+      } else {
+        choose_preset(); //Restart program to return to preset screen
+      }
+    }
+
+    //Read encoder
+    encoder.tick();
+    int dir = (int)(encoder.getDirection());
+    if (dir > 0 && cursor_idx == 0) {
+      cursor_idx = 8;
+    } else if (dir < 0 && cursor_idx == 8) {
+      cursor_idx = 0;
+    }
+
+    //Update cursor
+    lcd.setCursor(cursor_idx, 1);
+
+    //Stability Delay
+    delay(2);
+  }
 }
 
 void step_coil() {
