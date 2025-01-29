@@ -387,7 +387,7 @@ void confirm_screen() {
 
 void spin() {
   //Local vals
-  int num_step_coil_const = 1010 * FULL_ROTATION;
+  int num_step_coil_const = num_turns * FULL_ROTATION;
   int num_step_coil = num_step_coil_const;
   int percent_complete = (100 * (num_step_coil_const - num_step_coil)) / num_step_coil_const;
   int new_percent_complete = percent_complete;
