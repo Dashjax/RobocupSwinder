@@ -29,8 +29,8 @@ const float FEED_PER_FULL_ROTATION = 0.8; //cm
 const float FEED_PER_STEP = FEED_PER_FULL_ROTATION / FULL_ROTATION;
 const float FEED_STEP_PER_FULL_ROTATION = WIRE_DIAMETER / FEED_PER_STEP;
 const int COIL_STEP_PER_FEED_STEP = round(FULL_ROTATION / FEED_STEP_PER_FULL_ROTATION);
-const int OFFSET = 0.5;                   //cm
-const int PADDING = 0.1;                  //cm
+const float OFFSET = 0.5;                   //cm
+const float PADDING = 0.1;                  //cm
 
 //Basic vals
 float length = 5;       //In cm
@@ -393,6 +393,7 @@ void spin() {
   int num_step_coil = num_step_coil_const;
   int percent_complete = (100 * (num_step_coil_const - num_step_coil)) / num_step_coil_const;
   int new_percent_complete = percent_complete;
+  float carriage_pos = -(OFFSET + PADDING);
 
   //Screen setup
   lcd.clear();
@@ -419,9 +420,13 @@ void spin() {
 
   //Reverse carriage direction
   digitalWrite(feed_motor_dir, HIGH);
+  delay(100);
 
   //Move to start position
-  
+  while (carriage_pos < 0) {
+     step_feed();
+     carriage_pos += FEED_PER_STEP;
+  }
 
   //Process screen setup
   lcd.setCursor(0, 1);
@@ -463,16 +468,16 @@ void pause() {
 
 void step_coil() {
   digitalWrite(coil_motor_step, HIGH);
-  delay(1);
+  delay(MOTOR_DELAY);
   digitalWrite(coil_motor_step, LOW);
-  delay(1);
+  delay(MOTOR_DELAY);
 }
 
 void step_feed() {
   digitalWrite(feed_motor_step, HIGH);
-  delay(1);
+  delay(MOTOR_DELAY);
   digitalWrite(feed_motor_step, LOW);
-  delay(1);
+  delay(MOTOR_DELAY);
 }
 
 /*
