@@ -394,6 +394,7 @@ void spin() {
   int percent_complete = (100 * (num_step_coil_const - num_step_coil)) / num_step_coil_const;
   int new_percent_complete = percent_complete;
   float carriage_pos = -(OFFSET + PADDING);
+  int carriage_factor = 1;
 
   //Screen setup
   lcd.clear();
@@ -446,10 +447,20 @@ void spin() {
       pause();
     }
 
+    //Reverse carriage
+    if (carriage_pos > length - PADDING) {
+      digitalWrite(feed_motor_dir, LOW);
+      carriage_factor *= -1;
+    }
+    if (carriage_pos < PADDING) {
+      digitalWrite(feed_motor_dir, HIGH);
+      carriage_factor -= 1;
+    }
 
 
     //Decrement steps
     num_step_coil -= 1;
+    carriage_pos += FEED_PER_STEP * carriage_factor;
 
     //Update Screen
     new_percent_complete = (100 * (num_step_coil_const - num_step_coil)) / num_step_coil_const;
