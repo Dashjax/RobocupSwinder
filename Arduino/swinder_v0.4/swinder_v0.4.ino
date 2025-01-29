@@ -387,6 +387,12 @@ void confirm_screen() {
   }
 }
 
+/*
+Spin process, runs to completion
+-Rotate Clockwise: None
+-Rotate Counterclockwise: None
+-Press: Goes to pause
+*/
 void spin() {
   //Local vals
   int num_step_coil_const = num_turns * FULL_ROTATION;
@@ -444,7 +450,7 @@ void spin() {
     if (digitalRead(rbutton) == LOW) {
       delay(BUTTON_DELAY);
       pause();
-      lcd.clear();
+      lcd.clear(); //Reset display after pause
       lcd.setCursor(0, 0);
       lcd.print("Percent Complete:");
       lcd.setCursor(0, 1);
@@ -473,6 +479,7 @@ void spin() {
 
     //Decrement steps
     num_step_coil -= 1;
+    //Increment step count
     step_count += 1;
 
     //Update Screen
