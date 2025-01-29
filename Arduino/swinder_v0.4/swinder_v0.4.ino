@@ -29,6 +29,8 @@ const float FEED_PER_FULL_ROTATION = 0.8; //cm
 const float FEED_PER_STEP = FEED_PER_FULL_ROTATION / FULL_ROTATION;
 const float FEED_STEP_PER_FULL_ROTATION = WIRE_DIAMETER / FEED_PER_STEP;
 const int COIL_STEP_PER_FEED_STEP = round(FULL_ROTATION / FEED_STEP_PER_FULL_ROTATION);
+const int OFFSET = 0.5;                   //cm
+const int PADDING = 0.1;                  //cm
 
 //Basic vals
 float length = 5;       //In cm
@@ -418,6 +420,9 @@ void spin() {
   //Reverse carriage direction
   digitalWrite(feed_motor_dir, HIGH);
 
+  //Move to start position
+  
+
   //Process screen setup
   lcd.setCursor(0, 1);
   lcd.print("OK!             ");
@@ -435,6 +440,8 @@ void spin() {
       delay(BUTTON_DELAY);
       pause();
     }
+
+
 
     //Decrement steps
     num_step_coil -= 1;
