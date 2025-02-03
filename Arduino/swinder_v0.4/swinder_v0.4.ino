@@ -492,16 +492,14 @@ void spin() {
     }
   }
 
-  //Checks (agiain) for completion and goes to 'Done' screen
-  if (percent_complete == 100 || num_step_coil < 1) {
-    done();
-  }
+  //Goes to completion screen to prompt to restart
+  done();
 }
 
 void pause() {
-  //Local vars
+  //Local variables
   int cursor_idx = 0;
-
+  
   //Screen setup
   lcd.clear();
   lcd.setCursor(0, 0);
@@ -572,9 +570,6 @@ Displays "Done" screen when winding has completed
 - Has NO functionality for moving the cursor
 */
 void done() {
-  //Local variables
-  int cursor_idx = 0;
-
   //Screen setup
   lcd.clear();
   lcd.setCursor(0,0);
