@@ -579,6 +579,19 @@ void done() {
   lcd.cursor();
   lcd.blink();
   lcd.setCursor(0,1);
+
+  //Loop until confirmation
+  while (true) {
+    //Read button
+    if(digitalRead(rbutton) == LOW) {
+      lcd.noBlink();
+      lcd.noCursor();
+      choose_preset(); //Restart program and return to preset screen
+    }
+
+    //Stability delay
+    delay(2);
+  }
 }
 
 /*
