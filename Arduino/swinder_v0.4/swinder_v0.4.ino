@@ -130,9 +130,9 @@ void choose_preset() {
           radius = 0.5;
           break;
         case 7:
-          inductance = 80;
-          length = 3;
-          radius = 0.5;
+          inductance = 0.1;
+          length = 1;
+          radius = 1;
           break;
         default:
           inductance = 0;
@@ -499,7 +499,7 @@ void spin() {
 void pause() {
   //Local variables
   int cursor_idx = 0;
-  
+
   //Screen setup
   lcd.clear();
   lcd.setCursor(0, 0);
@@ -576,16 +576,12 @@ void done() {
   lcd.print("Completed!");
   lcd.setCursor(0,1);
   lcd.print("Press to Return");
-  lcd.cursor();
-  lcd.blink();
-  lcd.setCursor(0,1);
 
   //Loop until confirmation
   while (true) {
     //Read button
     if(digitalRead(rbutton) == LOW) {
-      lcd.noBlink();
-      lcd.noCursor();
+      delay(BUTTON_DELAY);
       choose_preset(); //Restart program and return to preset screen
     }
 
