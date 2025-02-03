@@ -491,6 +491,11 @@ void spin() {
       lcd.print("%");
     }
   }
+
+  //Checks (agiain) for completion and goes to 'Done' screen
+  if (percent_complete == 100 || num_step_coil < 1) {
+    done();
+  }
 }
 
 void pause() {
