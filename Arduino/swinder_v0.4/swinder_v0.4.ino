@@ -560,6 +560,27 @@ void step_both() {
   digitalWrite(coil_motor_step, LOW);
   delay(MOTOR_DELAY);
 }
+
+/*
+Displays "Done" screen when winding has completed
+- On button press, return to preset screen
+- Has NO functionality for moving the cursor
+*/
+void done() {
+  //Local variables
+  int cursor_idx = 0;
+
+  //Screen setup
+  lcd.clear();
+  lcd.setCursor(0,0);
+  lcd.print("Completed!");
+  lcd.setCursor(0,1);
+  lcd.print("Press to Return");
+  lcd.cursor();
+  lcd.blink();
+  lcd.setCursor(0,1);
+}
+
 /*
 Formats numbers to have the right amount of leading zeros for display
 num: number to be formatted
