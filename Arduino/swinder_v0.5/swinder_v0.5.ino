@@ -4,10 +4,10 @@
 
 //Pins setup
 const int lcd_rs = 0, lcd_en = 1, lcd_d4 = 2, lcd_d5 = 3, lcd_d6 = 4, lcd_d7 = 5;
-const int coil_motor_step = 36, coil_motor_dir = 37;
-const int feed_motor_step = 38, feed_motor_dir = 39;
+const int coil_motor_step = 36, coil_motor_dir = 37, coil_motor_fault = 38;
+const int feed_motor_step = 39, feed_motor_dir = 40, feed_motor_fault = 41;
 const int rbutton = 23, ra = 22, rb = 21;
-const int limit_switch = 40;
+const int limit_switch = 13;
 
 //Define LCD
 LiquidCrystal lcd(lcd_rs, lcd_en, lcd_d4, lcd_d5, lcd_d6, lcd_d7);
@@ -59,6 +59,8 @@ void setup() {
   pinMode(coil_motor_dir, OUTPUT);
   pinMode(feed_motor_step, OUTPUT);
   pinMode(feed_motor_dir, OUTPUT);
+  pinMode(coil_motor_fault, INPUT);
+  pinMode(feed_motor_fault, INPUT);
   digitalWrite(coil_motor_dir, LOW);
   digitalWrite(feed_motor_dir, LOW);
 }
@@ -416,6 +418,10 @@ void spin() {
 
   //Zero carriage
   while (true) {
+    //Check for motor fault
+    if (digitalRead(coil_motor_fault) == LOW || digitalRead(feed_motor_fault) == LOW) {
+      motor_fault();
+    }
     if (digitalRead(limit_switch) == HIGH) {
       break;
     } else {
@@ -429,8 +435,12 @@ void spin() {
 
   //Move to start position
   while (carriage_pos < 0) {
-     step_feed();
-     carriage_pos += FEED_PER_STEP;
+    //Check for motor fault
+    if (digitalRead(coil_motor_fault) == LOW || digitalRead(feed_motor_fault) == LOW) {
+      motor_fault();
+    }
+    step_feed();
+    carriage_pos += FEED_PER_STEP;
   }
   carriage_pos = 0;
 
@@ -446,6 +456,10 @@ void spin() {
   lcd.print("%");
 
   while (num_step_coil > 0) { //Process loop
+    //Check for motor fault
+    if (digitalRead(coil_motor_fault) == LOW || digitalRead(feed_motor_fault) == LOW) {
+      motor_fault();
+    }
     //Read Button
     if (digitalRead(rbutton) == LOW) {
       delay(BUTTON_DELAY);
@@ -537,6 +551,16 @@ void pause() {
     lcd.setCursor(cursor_idx, 1);
 
     //Stability Delay
+    delay(2);
+  }
+}
+
+void motor_fault() {
+  lcd.setCursor(0, 0);
+  lcd.print("     ERROR!     ");
+  lcd.setCursor(0, 1);
+  lcd.print("  MOTOR FAULT!  ");
+  while(true) {
     delay(2);
   }
 }
