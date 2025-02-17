@@ -1,0 +1,33 @@
+[package]
+name = "swinder"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+cortex-m = "0.7.7"
+embedded-alloc = "0.5.0"
+log = "0.4.22"
+rtic = { version = "2.1.1", features = ["thumbv7-backend"] }
+teensy4-panic = { version = "0.2.3", features = ["log"] }
+teensy4-pins = "0.3.2"
+stepper-driver = "=0.1.0"
+rtic-monotonics = { version = "1.0.0", features = ["cortex-m-systick"] }
+lcd1602-driver = "0.2.0"
+hd44780-driver = "0.4.0"
+imxrt-hal = "0.5.9"
+
+[dependencies.teensy4-bsp]
+version = "0.4.5"
+features = ["rt", "usb-logging"]
+
+[dependencies.embedded-hal]
+version = "1.0.0"
+package = "embedded-hal"
+
+[profile.release.build-override]
+opt-level = 0
+
+[workspace]
+members = [
+    "tools",
+]

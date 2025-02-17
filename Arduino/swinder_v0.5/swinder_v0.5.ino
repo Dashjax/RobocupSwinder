@@ -7,7 +7,7 @@ const int lcd_rs = 0, lcd_en = 1, lcd_d4 = 2, lcd_d5 = 3, lcd_d6 = 4, lcd_d7 = 5
 const int coil_motor_step = 36, coil_motor_dir = 37, coil_motor_fault = 38;
 const int feed_motor_step = 39, feed_motor_dir = 40, feed_motor_fault = 41;
 const int rbutton = 23, ra = 22, rb = 21;
-const int limit_switch = 13;
+const int limit_switch = 18;
 
 //Define LCD
 LiquidCrystal lcd(lcd_rs, lcd_en, lcd_d4, lcd_d5, lcd_d6, lcd_d7);
@@ -25,7 +25,7 @@ const float MAX_INDUCTANCE = 10000;       //mH
 const float MAX_RADIUS = 5;               //cm
 const float WIRE_DIAMETER = 0.0511;       //cm
 const int FULL_ROTATION = 240;            //steps
-const float FEED_PER_FULL_ROTATION = 0.8; //cm
+const float FEED_PER_FULL_ROTATION = 0.16; //cm
 const float FEED_PER_STEP = FEED_PER_FULL_ROTATION / (FULL_ROTATION * 2);
 const float FEED_STEP_PER_FULL_ROTATION = WIRE_DIAMETER / FEED_PER_STEP;
 const int COIL_STEP_PER_FEED_STEP = round(FULL_ROTATION / FEED_STEP_PER_FULL_ROTATION);
