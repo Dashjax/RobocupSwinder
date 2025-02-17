@@ -11,7 +11,7 @@ use teensy4_panic as _;
 
 #[rtic::app(device = teensy4_bsp, peripherals = true, dispatchers = [GPT2])]
 mod app {
-    use super::*;
+    use swinder::{Gpio1, Gpio2, Gpio3, Gpio4, PitDelay, Delay2, GPT_FREQUENCY};
     
     #[local]
     struct Local {
