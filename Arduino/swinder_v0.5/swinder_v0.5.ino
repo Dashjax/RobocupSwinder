@@ -1,6 +1,6 @@
   #include <LiquidCrystal.h>
   #include <DRV8825.h>
-  #include <RotaryEncoder.h>
+  #include <Encoder.h>
 
 //Pins setup
 const int lcd_rs = 0, lcd_en = 1, lcd_d4 = 2, lcd_d5 = 3, lcd_d6 = 4, lcd_d7 = 5;
@@ -13,7 +13,7 @@ const int limit_switch = 18;
 LiquidCrystal lcd(lcd_rs, lcd_en, lcd_d4, lcd_d5, lcd_d6, lcd_d7);
 
 //Define RotaryEncoder
-RotaryEncoder encoder(ra, rb, RotaryEncoder::LatchMode::FOUR3);
+Encoder encoder(ra, rb);
 
 //Const vals
 const float pi = 3.14159;
@@ -49,6 +49,9 @@ void setup() {
 
   //Setup button inputs
   pinMode(rbutton, INPUT);
+
+  //Setup encoder
+  encoder.write(0);
   
 
   //Setup limit switch
@@ -97,6 +100,7 @@ Select Preset Screen
 void choose_preset() {
   //Local vars
   int cursor_idx = 1;
+  long oldPosition = encoder.read() / 4;
 
   //Screen setup
   lcd.clear();
@@ -149,12 +153,14 @@ void choose_preset() {
     }
 
     //Read Encoder
-    encoder.tick();
-    int dir = (int)(encoder.getDirection());
+    long newPosition = encoder.read() / 4;
+    int dir = newPosition - oldPosition;
     if (dir > 0 && cursor_idx < 9) {
       cursor_idx += 2;
+      oldPosition = newPosition;
     } else if (dir < 0 && cursor_idx > 1) {
       cursor_idx -= 2;
+      oldPosition = newPosition;
     }
 
     //Update cursor
@@ -179,6 +185,7 @@ Screens:
 void val_select() {
   //Local vars
   int screen_idx = 0;
+  long oldPosition = encoder.read() / 4;
 
   //Screen setup
   lcd.clear();
@@ -237,13 +244,15 @@ void val_select() {
     }
 
     //Read Encoder
-    encoder.tick();
-    int dir = (int)(encoder.getDirection());
+    long newPosition = encoder.read() / 4;
+    int dir = newPosition - oldPosition;
     if (dir > 0 && screen_idx < 3) {
       screen_idx += 1;
+      oldPosition = newPosition;
       lcd.clear();
     } else if (dir < 0 && screen_idx > 0) {
       screen_idx -= 1;
+      oldPosition = newPosition;
       lcd.clear();
     }
 
@@ -266,6 +275,7 @@ void val_editor(float* val, float max) {
   int cursor_idx = num_length - 1;
   float pwr_factor = 0.01;  //Power of 10 to add/subtract depending on cursor location
   bool editing_digit = false;
+  long oldPosition = encoder.read() / 4;
 
   //Screen setup
   lcd.setCursor(11, 1);
@@ -296,8 +306,8 @@ void val_editor(float* val, float max) {
     }
 
     //Read Encoder
-    encoder.tick();
-    int dir = (int)(encoder.getDirection());
+    long newPosition = encoder.read() / 4;
+    int dir = newPosition - oldPosition;
     if (!editing_digit) { //Selecting digit
       if (dir < 0 && cursor_idx > 0) {
         cursor_idx--;
@@ -318,12 +328,14 @@ void val_editor(float* val, float max) {
         }
         pwr_factor /= 10;
       }
+      oldPosition = newPosition;
     } else { //Editing Digit
       if (dir > 0 && *val + pwr_factor <= max) {
         *val += pwr_factor;
       } else if (dir < 0 && *val - pwr_factor >= 0) {
         *val -= pwr_factor;
       }
+      oldPosition = newPosition;
     }
     
     //Update Screen
@@ -347,6 +359,7 @@ N returns to val select
 void confirm_screen() {
   //Local vars
   int cursor_idx = 0;
+  long oldPosition = encoder.read() / 4;
 
   //Screen setup
   lcd.clear();
@@ -373,12 +386,14 @@ void confirm_screen() {
     }
 
     //Read encoder
-    encoder.tick();
-    int dir = (int)(encoder.getDirection());
+    long newPosition = encoder.read() / 4;
+    int dir = newPosition - oldPosition;
     if (dir > 0 && cursor_idx == 0) {
       cursor_idx = 2;
+      oldPosition = newPosition;
     } else if (dir < 0 && cursor_idx == 2) {
       cursor_idx = 0;
+      oldPosition = newPosition;
     }
 
     //Update cursor
@@ -513,6 +528,7 @@ void spin() {
 void pause() {
   //Local variables
   int cursor_idx = 0;
+  long oldPosition = encoder.read() / 4;
 
   //Screen setup
   lcd.clear();
@@ -539,12 +555,14 @@ void pause() {
     }
 
     //Read encoder
-    encoder.tick();
-    int dir = (int)(encoder.getDirection());
+    long newPosition = encoder.read() / 4;
+    int dir = newPosition - oldPosition;
     if (dir > 0 && cursor_idx == 0) {
       cursor_idx = 8;
+      oldPosition = newPosition;
     } else if (dir < 0 && cursor_idx == 8) {
       cursor_idx = 0;
+      oldPosition = newPosition;
     }
 
     //Update cursor
