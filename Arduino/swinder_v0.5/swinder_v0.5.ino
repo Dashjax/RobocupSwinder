@@ -1,4 +1,4 @@
-  #include <LiquidCrystal.h>
+  #include <LiquidCrystal_I2C.h>
   #include <DRV8825.h>
   #include <Encoder.h>
 
@@ -7,10 +7,10 @@ const int lcd_rs = 0, lcd_en = 1, lcd_d4 = 2, lcd_d5 = 3, lcd_d6 = 4, lcd_d7 = 5
 const int coil_motor_step = 36, coil_motor_dir = 37, coil_motor_fault = 38;
 const int feed_motor_step = 39, feed_motor_dir = 40, feed_motor_fault = 41;
 const int rbutton = 23, ra = 22, rb = 21;
-const int limit_switch = 18;
+const int limit_switch = 40;
 
 //Define LCD
-LiquidCrystal lcd(lcd_rs, lcd_en, lcd_d4, lcd_d5, lcd_d6, lcd_d7);
+LiquidCrystal_I2C lcd(0x27, 16, 2);
 
 //Define RotaryEncoder
 Encoder encoder(ra, rb);
@@ -44,7 +44,10 @@ void setup() {
   Serial.println("Hello World!");
 
   //Setup lcd
-  lcd.begin(16, 2);
+  lcd.init();
+  lcd.clear();
+  lcd.backlight();
+  lcd.setCursor(0, 0);
   lcd.print("Hello World!");
 
   //Setup button inputs
@@ -53,7 +56,6 @@ void setup() {
   //Setup encoder
   encoder.write(0);
   
-
   //Setup limit switch
   pinMode(limit_switch, INPUT);
 
