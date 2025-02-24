@@ -4,8 +4,8 @@
 
 //Pins setup
 const int lcd_rs = 0, lcd_en = 1, lcd_d4 = 2, lcd_d5 = 3, lcd_d6 = 4, lcd_d7 = 5;
-const int coil_motor_step = 36, coil_motor_dir = 37, coil_motor_fault = 29;
-const int feed_motor_step = 38, feed_motor_dir = 39, feed_motor_fault = 30;
+const int coil_motor_step = 36, coil_motor_dir = 37, coil_motor_fault = 29, coil_motor_sleep = 35;
+const int feed_motor_step = 38, feed_motor_dir = 39, feed_motor_fault = 30, feed_motor_sleep = 40;
 const int rbutton = 23, ra = 22, rb = 21;
 const int limit_switch = 20;
 
@@ -25,8 +25,8 @@ const float MAX_LENGTH = 20;              //cm
 const float MAX_INDUCTANCE = 10000;       //mH
 const float MAX_RADIUS = 5;               //cm
 const float WIRE_DIAMETER = 0.0511;       //cm
-const int FULL_ROTATION = 240;            //steps
-const float FEED_PER_FULL_ROTATION = 0.16; //cm
+const int FULL_ROTATION = 200;            //steps
+const float FEED_PER_FULL_ROTATION = 0.004 * FULL_ROTATION; //cm
 const float FEED_PER_STEP = FEED_PER_FULL_ROTATION / (FULL_ROTATION * 2);
 const float FEED_STEP_PER_FULL_ROTATION = WIRE_DIAMETER / FEED_PER_STEP;
 const int COIL_STEP_PER_FEED_STEP = round(FULL_ROTATION / FEED_STEP_PER_FULL_ROTATION);
@@ -63,12 +63,16 @@ void setup() {
   //Setup motor pins
   pinMode(coil_motor_step, OUTPUT);
   pinMode(coil_motor_dir, OUTPUT);
+  pinMode(coil_motor_sleep, OUTPUT);
   pinMode(feed_motor_step, OUTPUT);
   pinMode(feed_motor_dir, OUTPUT);
+  pinMode(feed_motor_sleep, OUTPUT);
   pinMode(coil_motor_fault, INPUT);
   pinMode(feed_motor_fault, INPUT);
   digitalWrite(coil_motor_dir, LOW);
   digitalWrite(feed_motor_dir, LOW);
+  digitalWrite(coil_motor_sleep, LOW);
+  digitalWrite(feed_motor_sleep, LOW);
 }
 
 //Main program loop
@@ -458,6 +462,11 @@ void spin() {
   lcd.setCursor(0, 1);
   lcd.print("Please Wait...");
 
+  //Wake motors
+  digitalWrite(coil_motor_sleep, HIGH);
+  digitalWrite(feed_motor_sleep, HIGH);
+  delay(500);
+
   //Set starting direction
   digitalWrite(coil_motor_dir, HIGH);
   digitalWrite(feed_motor_dir, LOW);
@@ -510,6 +519,7 @@ void spin() {
     if (digitalRead(rbutton) == LOW) {
       delay(BUTTON_DELAY);
       pause();
+      delay(500);
       lcd.clear(); //Reset display after pause
       lcd.setCursor(0, 0);
       lcd.print("Percent Complete:");
@@ -571,6 +581,10 @@ void pause() {
   lcd.blink();
   lcd.setCursor(0, 1);
 
+  //Sleep motors
+  digitalWrite(coil_motor_sleep, LOW);
+  digitalWrite(feed_motor_sleep, LOW);
+
   //Loop till confirmation
   while (true) {
     //Read Button
@@ -579,6 +593,8 @@ void pause() {
       lcd.noBlink();
       lcd.noCursor();
       if (cursor_idx == 0) {
+        digitalWrite(coil_motor_sleep, HIGH);
+        digitalWrite(feed_motor_sleep, HIGH);
         return; //Go back to spin and continue
       } else {
         choose_preset(); //Restart program to return to preset screen
@@ -606,11 +622,22 @@ void pause() {
   }
 }
 
+/*
+Only called in case of motor fault from either of the driver fault pins.
+Infinitly loops till a hard reset.
+*/
 void motor_fault() {
+  //Stop motors
+  digitalWrite(coil_motor_sleep, LOW);
+  digitalWrite(feed_motor_sleep, LOW);
+  
+  //Setup Screen
   lcd.setCursor(0, 0);
   lcd.print("     ERROR!     ");
   lcd.setCursor(0, 1);
   lcd.print("  MOTOR FAULT!  ");
+
+  //Infinitely loop till forced reset
   while(true) {
     delay(2);
   }
