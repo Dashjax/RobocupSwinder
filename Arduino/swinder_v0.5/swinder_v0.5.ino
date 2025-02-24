@@ -4,12 +4,13 @@
 
 //Pins setup
 const int lcd_rs = 0, lcd_en = 1, lcd_d4 = 2, lcd_d5 = 3, lcd_d6 = 4, lcd_d7 = 5;
-const int coil_motor_step = 36, coil_motor_dir = 37, coil_motor_fault = 38;
-const int feed_motor_step = 39, feed_motor_dir = 40, feed_motor_fault = 41;
+const int coil_motor_step = 36, coil_motor_dir = 37, coil_motor_fault = 29;
+const int feed_motor_step = 38, feed_motor_dir = 39, feed_motor_fault = 30;
 const int rbutton = 23, ra = 22, rb = 21;
-const int limit_switch = 40;
+const int limit_switch = 20;
 
 //Define LCD
+//Pins: SDA 18, SCL 19
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 
 //Define RotaryEncoder
@@ -163,6 +164,8 @@ void choose_preset() {
     } else if (dir < 0 && cursor_idx > 1) {
       cursor_idx -= 2;
       oldPosition = newPosition;
+    } else if (dir != 0) {
+      oldPosition = newPosition;
     }
 
     //Update cursor
@@ -187,6 +190,7 @@ Screens:
 void val_select() {
   //Local vars
   int screen_idx = 0;
+  bool screen_change = true;
   long oldPosition = encoder.read() / 4;
 
   //Screen setup
@@ -196,33 +200,36 @@ void val_select() {
   while(true) {
 
     //Screens
-    switch (screen_idx) {
-      case 0: //Inductance (mH)
-        lcd.setCursor(0, 0);
-        lcd.print("Inductance (mH)");
-        lcd.setCursor(0, 1);
-        lcd.print(format_val(inductance, MAX_INDUCTANCE));
-        break;
-      case 1: //Length (cm)
-        lcd.setCursor(0, 0);
-        lcd.print("Length (cm)");
-        lcd.setCursor(0, 1);
-        lcd.print(format_val(length, MAX_LENGTH));
-        break;
-      case 2: //Radius (cm)
-        lcd.setCursor(0, 0);
-        lcd.print("Radius (cm)");
-        lcd.setCursor(0, 1);
-        lcd.print(format_val(radius, MAX_RADIUS));
-        break;
-      case 3: //Confirmation Screen
-        num_turns = calc_turns(inductance, length, radius);
-        lcd.setCursor(0, 0);
-        lcd.print("Turns: ");
-        lcd.print(num_turns);
-        lcd.setCursor(0, 1);
-        lcd.print("Confirm");
-        break;
+    if (screen_change) {
+      switch (screen_idx) {
+        case 0: //Inductance (mH)
+          lcd.setCursor(0, 0);
+          lcd.print("Inductance (mH)");
+          lcd.setCursor(0, 1);
+          lcd.print(format_val(inductance, MAX_INDUCTANCE));
+          break;
+        case 1: //Length (cm)
+          lcd.setCursor(0, 0);
+          lcd.print("Length (cm)");
+          lcd.setCursor(0, 1);
+          lcd.print(format_val(length, MAX_LENGTH));
+          break;
+        case 2: //Radius (cm)
+          lcd.setCursor(0, 0);
+          lcd.print("Radius (cm)");
+          lcd.setCursor(0, 1);
+          lcd.print(format_val(radius, MAX_RADIUS));
+          break;
+        case 3: //Confirmation Screen
+          num_turns = calc_turns(inductance, length, radius);
+          lcd.setCursor(0, 0);
+          lcd.print("Turns: ");
+          lcd.print(num_turns);
+          lcd.setCursor(0, 1);
+          lcd.print("Confirm");
+          break;
+      }
+      screen_change = false;
     }
 
     //Read Button
@@ -242,6 +249,8 @@ void val_select() {
           confirm_screen();
         break;
       }
+      oldPosition = encoder.read() / 4;
+      screen_change = true;
       lcd.clear();
     }
 
@@ -251,11 +260,15 @@ void val_select() {
     if (dir > 0 && screen_idx < 3) {
       screen_idx += 1;
       oldPosition = newPosition;
+      screen_change = true;
       lcd.clear();
     } else if (dir < 0 && screen_idx > 0) {
       screen_idx -= 1;
       oldPosition = newPosition;
+      screen_change = true;
       lcd.clear();
+    } else if (dir != 0) {
+      oldPosition = newPosition;
     }
 
     //Stability Delay
@@ -277,6 +290,7 @@ void val_editor(float* val, float max) {
   int cursor_idx = num_length - 1;
   float pwr_factor = 0.01;  //Power of 10 to add/subtract depending on cursor location
   bool editing_digit = false;
+  bool screen_change = true;
   long oldPosition = encoder.read() / 4;
 
   //Screen setup
@@ -320,6 +334,8 @@ void val_editor(float* val, float max) {
           cursor_idx = num_length - 1;
         }
         pwr_factor *= 10;
+        screen_change = true;
+        oldPosition = newPosition;
       } else if (dir > 0 && cursor_idx <= num_length - 1) {
         cursor_idx++;
         if (cursor_idx == num_length - 3) { //Jump Decimal
@@ -329,21 +345,32 @@ void val_editor(float* val, float max) {
           cursor_idx = 11;
         }
         pwr_factor /= 10;
+        screen_change = true;
+        oldPosition = newPosition;
+      } else if (dir != 0) {
+        oldPosition = newPosition;
       }
-      oldPosition = newPosition;
     } else { //Editing Digit
       if (dir > 0 && *val + pwr_factor <= max) {
         *val += pwr_factor;
+        screen_change = true;
+        oldPosition = newPosition;
       } else if (dir < 0 && *val - pwr_factor >= 0) {
         *val -= pwr_factor;
+        screen_change = true;
+        oldPosition = newPosition;
+      } else if (dir != 0) {
+        oldPosition = newPosition;
       }
-      oldPosition = newPosition;
     }
     
     //Update Screen
-    lcd.setCursor(0, 1);
-    lcd.print(format_val(*val, max));
-    lcd.setCursor(cursor_idx, 1);
+    if (screen_change) {
+      lcd.setCursor(0, 1);
+      lcd.print(format_val(*val, max));
+      lcd.setCursor(cursor_idx, 1);
+      screen_change = false;
+    }
     
     //Stability Delay
     delay(2);
@@ -395,6 +422,8 @@ void confirm_screen() {
       oldPosition = newPosition;
     } else if (dir < 0 && cursor_idx == 2) {
       cursor_idx = 0;
+      oldPosition = newPosition;
+    } else if (dir != 0) {
       oldPosition = newPosition;
     }
 
@@ -564,6 +593,8 @@ void pause() {
       oldPosition = newPosition;
     } else if (dir < 0 && cursor_idx == 8) {
       cursor_idx = 0;
+      oldPosition = newPosition;
+    } else if (dir != 0) {
       oldPosition = newPosition;
     }
 
