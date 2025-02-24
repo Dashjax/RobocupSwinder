@@ -1,4 +1,4 @@
-23839640993140525
+23841383165732350
 Audio_Module
 Reverb_BTDR-1H
 Digital Reverberation Unit, http://www.belton.co.kr/inc/downfile.php?seq=17&file=pdf (footprint from http://www.uk-electronic.de/PDF/BTDR-1.pdf)
@@ -90649,6 +90649,13 @@ Teensy4.1 Pins-only
 0
 48
 48
+TeensyLibrary
+Teensy41
+
+
+0
+67
+67
 TerminalBlock
 TerminalBlock_Altech_AK300-2_P5.00mm
 Altech AK300 terminal block, pitch 5.0mm, 45 degree angled, see http://www.mouser.com/ds/2/16/PCBMETRC-24178.pdf
