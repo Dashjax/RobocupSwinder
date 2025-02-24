@@ -1,0 +1,121 @@
+(footprint "DISPLAY4PIN"
+	(version 20240108)
+	(generator "pcbnew")
+	(generator_version "8.0")
+	(layer "F.Cu")
+	(descr "LCD 16x2 http://www.wincomlcd.com/pdf/WC1602A-SFYLYHTC06.pdf")
+	(tags "LCD 16x2 Alphanumeric 16pin")
+	(property "Reference" "REF**"
+		(at -5.876071 -3.75 0)
+		(layer "F.SilkS")
+		(hide yes)
+		(uuid "77786e28-21e2-4d40-b3cc-1807ba075259")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Value" "DISPLAY4PIN"
+		(at 3.123929 3.75 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "7f9e4700-d8ff-42cd-8f56-b0a2dcbdf819")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Footprint" ""
+		(at -0.376071 0.25 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "84a1d75a-db93-4d70-aca1-7b63f4a923f8")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Datasheet" ""
+		(at -0.376071 0.25 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "9182b145-2152-4c23-965c-6f9108156be9")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Description" ""
+		(at -0.376071 0.25 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "8d7e6426-b4b2-46ca-9150-82ddca260c8f")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(attr through_hole)
+	(pad "1" thru_hole rect
+		(at -3.81 0)
+		(size 1.8 2.6)
+		(drill 1.2)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "b6f3a671-13a5-412d-91f8-b0bbc352aa5e")
+	)
+	(pad "2" thru_hole oval
+		(at -1.27 0)
+		(size 1.8 2.6)
+		(drill 1.2)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "dc9fc7ed-3cc4-4c3f-939f-04d680d771e2")
+	)
+	(pad "3" thru_hole oval
+		(at 1.27 0)
+		(size 1.8 2.6)
+		(drill 1.2)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "4d50530e-0338-4689-aff1-bf2f3334213e")
+	)
+	(pad "4" thru_hole oval
+		(at 3.81 0)
+		(size 1.8 2.6)
+		(drill 1.2)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "09b250f0-914b-47fd-a84a-dba6f6997a54")
+	)
+	(group ""
+		(uuid "558afe77-d80b-429f-a79e-8283dfd90e8c")
+		(members "09b250f0-914b-47fd-a84a-dba6f6997a54" "4d50530e-0338-4689-aff1-bf2f3334213e"
+			"b6f3a671-13a5-412d-91f8-b0bbc352aa5e" "dc9fc7ed-3cc4-4c3f-939f-04d680d771e2"
+		)
+	)
+	(model "${KICAD8_3DMODEL_DIR}/Display.3dshapes/WC1602A.wrl"
+		(offset
+			(xyz 0 0 0)
+		)
+		(scale
+			(xyz 1 1 1)
+		)
+		(rotate
+			(xyz 0 0 0)
+		)
+	)
+)
