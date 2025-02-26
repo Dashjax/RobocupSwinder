@@ -6,7 +6,7 @@
 const int coil_motor_step = 36, coil_motor_dir = 37, coil_motor_fault = 29, coil_motor_sleep = 35;
 const int feed_motor_step = 38, feed_motor_dir = 39, feed_motor_fault = 30, feed_motor_sleep = 40;
 const int rbutton = 23, ra = 22, rb = 21;
-const int limit_switch_front = 7, limit_switch_end = 8;
+const int limit_switch_start = 7, limit_switch_end = 8;
 
 //Define LCD
 //Pins: SDA 18, SCL 19
@@ -476,7 +476,7 @@ void spin() {
     if (digitalRead(coil_motor_fault) == LOW || digitalRead(feed_motor_fault) == LOW) {
       motor_fault();
     }
-    if (digitalRead(limit_switch) == HIGH) {
+    if (digitalRead(limit_switch_start) == HIGH) {
       break;
     } else {
       step_feed();
