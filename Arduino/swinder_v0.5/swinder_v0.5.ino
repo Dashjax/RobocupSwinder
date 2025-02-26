@@ -3,11 +3,10 @@
   #include <Encoder.h>
 
 //Pins setup
-const int lcd_rs = 0, lcd_en = 1, lcd_d4 = 2, lcd_d5 = 3, lcd_d6 = 4, lcd_d7 = 5;
 const int coil_motor_step = 36, coil_motor_dir = 37, coil_motor_fault = 29, coil_motor_sleep = 35;
 const int feed_motor_step = 38, feed_motor_dir = 39, feed_motor_fault = 30, feed_motor_sleep = 40;
 const int rbutton = 23, ra = 22, rb = 21;
-const int limit_switch = 20;
+const int limit_switch_front = 7, limit_switch_end = 8;
 
 //Define LCD
 //Pins: SDA 18, SCL 19
