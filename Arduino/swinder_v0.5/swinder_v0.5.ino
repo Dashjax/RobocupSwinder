@@ -57,7 +57,8 @@ void setup() {
   encoder.write(0);
   
   //Setup limit switch
-  pinMode(limit_switch, INPUT);
+  pinMode(limit_switch_start, INPUT);
+  pinMode(limit_switch_end, INPUT);
 
   //Setup motor pins
   pinMode(coil_motor_step, OUTPUT);
