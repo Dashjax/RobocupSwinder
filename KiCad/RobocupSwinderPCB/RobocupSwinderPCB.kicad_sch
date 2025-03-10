@@ -6545,7 +6545,7 @@
 		)
 		(uuid "265c53aa-a8cb-41a6-8c5e-4db7fa5d6327")
 	)
-	(label "Feed_FLT_Pin_22"
+	(label "Feed_FLT_Pin_21"
 		(at 281.94 135.89 0)
 		(fields_autoplaced yes)
 		(effects
@@ -6578,7 +6578,7 @@
 		)
 		(uuid "43dfa7e7-a8e9-4fa6-8a48-ad99a2fefb04")
 	)
-	(label "Coil_FLT_Pin_21"
+	(label "Coil_FLT_Pin_22"
 		(at 279.4 186.69 0)
 		(fields_autoplaced yes)
 		(effects
@@ -6666,7 +6666,7 @@
 		)
 		(uuid "dc1a23af-c213-4091-81f8-940724aad37b")
 	)
-	(label "Coil_FLT_Pin_21"
+	(label "Feed_FLT_Pin_21"
 		(at 166.37 151.13 0)
 		(fields_autoplaced yes)
 		(effects
@@ -6699,7 +6699,7 @@
 		)
 		(uuid "e4dada17-a357-4f05-bb94-64f1f7d1899c")
 	)
-	(label "Feed_FLT_Pin_22"
+	(label "Coil_FLT_Pin_22"
 		(at 166.37 153.67 0)
 		(fields_autoplaced yes)
 		(effects
