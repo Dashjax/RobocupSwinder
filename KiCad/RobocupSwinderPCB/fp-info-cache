@@ -1,4 +1,4 @@
-24735605853036833
+24740831060849355
 Audio_Module
 Reverb_BTDR-1H
 Digital Reverberation Unit, http://www.belton.co.kr/inc/downfile.php?seq=17&file=pdf (footprint from http://www.uk-electronic.de/PDF/BTDR-1.pdf)
@@ -91850,6 +91850,27 @@ Socket
 Wells_648-0482211SA01
 https://www.farnell.com/cad/316865.pdf?_ga=2.37208032.177107060.1530611323-249019997.1498114824
 48pin TSOP Socket
+0
+48
+48
+SwinderFootprintLibrary
+CUI_PJ-037A
+
+
+0
+2
+2
+SwinderFootprintLibrary
+RoboBuzz
+
+
+0
+0
+0
+SwinderFootprintLibrary
+Teensy41-Pins-Only_Silkscreen
+
+
 0
 48
 48

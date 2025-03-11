@@ -252,7 +252,7 @@
 		)
 		(property ki_fp_filters "SW*DPDT*")
 		(path "/8178a5c1-3a85-4dc9-b9b2-fdc215e43ce9")
-		(sheetname "Root")
+		(sheetname "/")
 		(sheetfile "RobocupSwinderPCB.kicad_sch")
 		(attr through_hole)
 		(fp_line
@@ -709,7 +709,7 @@
 		)
 		(property ki_fp_filters "R_*")
 		(path "/3a4d0d76-cff5-4a8a-b512-77f2f5fc4e08")
-		(sheetname "Root")
+		(sheetname "/")
 		(sheetfile "RobocupSwinderPCB.kicad_sch")
 		(attr smd)
 		(fp_line
@@ -910,7 +910,7 @@
 		)
 		(property ki_fp_filters "CP_*")
 		(path "/2f9e726e-2bb7-4f7b-92b5-274f6f1ebc88")
-		(sheetname "Root")
+		(sheetname "/")
 		(sheetfile "RobocupSwinderPCB.kicad_sch")
 		(attr through_hole)
 		(fp_line
@@ -2636,7 +2636,7 @@
 		)
 		(property ki_fp_filters "SW*DPDT*")
 		(path "/a6804fed-c4dd-47c8-8004-cb19cdfc770c")
-		(sheetname "Root")
+		(sheetname "/")
 		(sheetfile "RobocupSwinderPCB.kicad_sch")
 		(attr through_hole)
 		(fp_line
@@ -3093,7 +3093,7 @@
 		)
 		(property ki_fp_filters "LED* LED_SMD:* LED_THT:*")
 		(path "/f35ffc6a-450e-4033-8584-3459a60b84c1")
-		(sheetname "Root")
+		(sheetname "/")
 		(sheetfile "RobocupSwinderPCB.kicad_sch")
 		(attr smd)
 		(fp_line
@@ -3316,7 +3316,7 @@
 		)
 		(property ki_fp_filters "MountingHole*Pad*")
 		(path "/edf9f75b-639b-40fa-becd-f8b4ed069d4a")
-		(sheetname "Root")
+		(sheetname "/")
 		(sheetfile "RobocupSwinderPCB.kicad_sch")
 		(attr exclude_from_pos_files exclude_from_bom)
 		(fp_circle
@@ -3421,7 +3421,7 @@
 		)
 		(property ki_fp_filters "R_*")
 		(path "/11f571ee-4e8c-4286-af4b-6e77e394b0ff")
-		(sheetname "Root")
+		(sheetname "/")
 		(sheetfile "RobocupSwinderPCB.kicad_sch")
 		(attr smd)
 		(fp_line
@@ -3621,7 +3621,7 @@
 			)
 		)
 		(path "/572b0762-c9fd-4d33-b7ac-46554643c903")
-		(sheetname "Root")
+		(sheetname "/")
 		(sheetfile "RobocupSwinderPCB.kicad_sch")
 		(attr through_hole)
 		(fp_line
@@ -4004,7 +4004,7 @@
 			(drill 0.95)
 			(layers "*.Cu" "*.Mask")
 			(remove_unused_layers no)
-			(net 25 "/LCD_SDA_Pin_18")
+			(net 26 "/LCD_SCL_Pin_19")
 			(pinfunction "SDA")
 			(pintype "bidirectional")
 			(uuid "91b30cdb-ed39-49e4-a9be-ea0e16c6a138")
@@ -4015,7 +4015,7 @@
 			(drill 0.95)
 			(layers "*.Cu" "*.Mask")
 			(remove_unused_layers no)
-			(net 26 "/LCD_SCL_Pin_19")
+			(net 25 "/LCD_SDA_Pin_18")
 			(pinfunction "SCL")
 			(pintype "bidirectional")
 			(uuid "9b768777-c4d7-4e14-9735-a833598f82f1")
@@ -4089,7 +4089,7 @@
 		)
 		(property ki_fp_filters "MountingHole*Pad*")
 		(path "/b190ad3a-97b9-4821-afab-09a0e522d071")
-		(sheetname "Root")
+		(sheetname "/")
 		(sheetfile "RobocupSwinderPCB.kicad_sch")
 		(attr exclude_from_pos_files exclude_from_bom)
 		(fp_circle
@@ -4193,7 +4193,7 @@
 			)
 		)
 		(path "/e8d5eaca-1f2b-4f74-8b3b-2a106a7d8dfc")
-		(sheetname "Root")
+		(sheetname "/")
 		(sheetfile "RobocupSwinderPCB.kicad_sch")
 		(attr through_hole)
 		(fp_line
@@ -4583,12 +4583,12 @@
 			)
 		)
 	)
-	(footprint "TeensyLibrary:Teensy41-Pins-Only_Silkscreen"
+	(footprint "SwinderFootprintLibrary:Teensy41-Pins-Only_Silkscreen"
 		(layer "F.Cu")
 		(uuid "515a21b7-7f4d-473d-9e38-98c5d0cd3cfb")
 		(at 133.01 104.37)
 		(property "Reference" "U1"
-			(at 0.07 9.98 0)
+			(at 0 -10.16 0)
 			(layer "F.SilkS")
 			(uuid "41927a1b-827f-428a-b0f4-b1b144e5fa3a")
 			(effects
@@ -4634,7 +4634,7 @@
 			)
 		)
 		(path "/32d55d51-66c2-4afe-8a55-1744033f67b5")
-		(sheetname "Root")
+		(sheetname "/")
 		(sheetfile "RobocupSwinderPCB.kicad_sch")
 		(attr through_hole)
 		(fp_line
@@ -4645,7 +4645,7 @@
 				(type solid)
 			)
 			(layer "F.SilkS")
-			(uuid "62bf0cd0-33ef-4ed9-a923-376a694d33ef")
+			(uuid "338cc103-046d-4211-b6b9-3298ec758ae0")
 		)
 		(fp_line
 			(start -31.75 3.81)
@@ -4655,7 +4655,7 @@
 				(type solid)
 			)
 			(layer "F.SilkS")
-			(uuid "9ddb3516-0d54-4ce1-9b95-98b2581a5c4a")
+			(uuid "545b6491-e84e-44c9-be76-4758dc9534f5")
 		)
 		(fp_line
 			(start -30.48 -8.89)
@@ -4665,7 +4665,7 @@
 				(type solid)
 			)
 			(layer "F.SilkS")
-			(uuid "fef1567a-0e47-4056-8af5-a4027afb5a44")
+			(uuid "71d33ebe-8bb5-4405-8a65-4796080054c0")
 		)
 		(fp_line
 			(start -30.48 3.81)
@@ -4675,7 +4675,7 @@
 				(type solid)
 			)
 			(layer "F.SilkS")
-			(uuid "97a2b5b6-997d-4e41-9923-9c5228a70dcc")
+			(uuid "213ff90e-6d47-4352-9b66-5c137c22ade1")
 		)
 		(fp_line
 			(start -30.48 8.89)
@@ -4685,7 +4685,7 @@
 				(type solid)
 			)
 			(layer "F.SilkS")
-			(uuid "b4fcd0b8-a0ca-4dcd-a7d3-104e0e2f78a3")
+			(uuid "9f068e5c-096c-44c2-bf59-9980ec10ba04")
 		)
 		(fp_line
 			(start -25.4 -3.81)
@@ -4695,7 +4695,7 @@
 				(type solid)
 			)
 			(layer "F.SilkS")
-			(uuid "ae0aa8b6-c352-45d0-917d-47b823f0e24d")
+			(uuid "f0f56c0b-55c7-4d21-aa65-3a8671e238b9")
 		)
 		(fp_line
 			(start -25.4 3.81)
@@ -4705,7 +4705,7 @@
 				(type solid)
 			)
 			(layer "F.SilkS")
-			(uuid "e6ebebb6-0077-425f-8406-c840d4179379")
+			(uuid "eba28724-9063-4888-ab8e-f38c229a6f32")
 		)
 		(fp_line
 			(start -25.4 3.81)
@@ -4715,7 +4715,7 @@
 				(type solid)
 			)
 			(layer "F.SilkS")
-			(uuid "2cf54f55-d549-42d3-9071-55e2137eda10")
+			(uuid "158d33dd-afd9-4f22-bedf-20d10d3e1d49")
 		)
 		(fp_line
 			(start -17.25 -6.3516)
@@ -4725,7 +4725,7 @@
 				(type solid)
 			)
 			(layer "F.SilkS")
-			(uuid "28838060-35de-48fb-976a-fbeeed070324")
+			(uuid "c20269bf-fc49-451e-b109-fe26d0b23ec0")
 		)
 		(fp_line
 			(start -7.62 -6.35)
@@ -4735,7 +4735,7 @@
 				(type solid)
 			)
 			(layer "F.SilkS")
-			(uuid "7bc42a7e-7ad9-4be4-bffc-846e86a17cdd")
+			(uuid "8fe1baed-667c-40b1-93a1-bd813d28c15c")
 		)
 		(fp_line
 			(start -7.62 6.35)
@@ -4745,7 +4745,7 @@
 				(type solid)
 			)
 			(layer "F.SilkS")
-			(uuid "062b26d9-c633-40f6-94ee-42e097d4ad96")
+			(uuid "0661f70c-6970-4a3f-bd60-c05b2f27b200")
 		)
 		(fp_line
 			(start 5.08 -6.35)
@@ -4755,7 +4755,7 @@
 				(type solid)
 			)
 			(layer "F.SilkS")
-			(uuid "5307add9-3468-4716-b309-28273f4f23da")
+			(uuid "2c4b8167-e67b-4dd5-adb1-449813b4fb22")
 		)
 		(fp_line
 			(start 5.08 6.35)
@@ -4765,7 +4765,7 @@
 				(type solid)
 			)
 			(layer "F.SilkS")
-			(uuid "3887c213-008c-4d23-8bec-f3844802025a")
+			(uuid "012d4ca1-7cf6-4020-b28d-fff21ef24eda")
 		)
 		(fp_line
 			(start 10.16 -1.27)
@@ -4775,7 +4775,7 @@
 				(type solid)
 			)
 			(layer "F.SilkS")
-			(uuid "699d368f-4999-4d55-9152-5b2fe31d7443")
+			(uuid "c71ccfa8-3cd3-4ec8-a792-348adcfc1940")
 		)
 		(fp_line
 			(start 10.16 1.27)
@@ -4785,7 +4785,7 @@
 				(type solid)
 			)
 			(layer "F.SilkS")
-			(uuid "03a024a9-33af-46db-9bb0-e6f7d1149881")
+			(uuid "ab5ec74f-9409-4750-a3ae-826b029b44d1")
 		)
 		(fp_line
 			(start 13.97 -1.27)
@@ -4795,7 +4795,7 @@
 				(type solid)
 			)
 			(layer "F.SilkS")
-			(uuid "b43cbdc3-fccb-4a52-b094-0d102307115e")
+			(uuid "3effac37-343d-4246-923a-5f227ae7c561")
 		)
 		(fp_line
 			(start 13.97 1.27)
@@ -4805,7 +4805,7 @@
 				(type solid)
 			)
 			(layer "F.SilkS")
-			(uuid "67df0e89-6d68-4c83-b2f9-307c10ea2c35")
+			(uuid "76ee1af1-ad8a-48fa-bf9a-2632c01082aa")
 		)
 		(fp_line
 			(start 17.78 -6.35)
@@ -4815,7 +4815,7 @@
 				(type solid)
 			)
 			(layer "F.SilkS")
-			(uuid "805151a6-6402-408a-a447-1a52b03afc7a")
+			(uuid "034e7ea3-41b5-4e20-860b-8ac374978856")
 		)
 		(fp_line
 			(start 17.78 6.35)
@@ -4825,7 +4825,7 @@
 				(type solid)
 			)
 			(layer "F.SilkS")
-			(uuid "eeb64f72-86f6-4379-b8ca-b0faeee5961a")
+			(uuid "a9f98875-5986-412a-85db-bf37fb92e04d")
 		)
 		(fp_line
 			(start 29.21 -5.08)
@@ -4835,7 +4835,7 @@
 				(type solid)
 			)
 			(layer "F.SilkS")
-			(uuid "1e36b8bd-a3e7-48c8-a559-6d9874288b8f")
+			(uuid "e9d107c1-5831-4765-9d36-49ddb5dae94b")
 		)
 		(fp_line
 			(start 29.21 5.08)
@@ -4845,7 +4845,7 @@
 				(type solid)
 			)
 			(layer "F.SilkS")
-			(uuid "5457acaf-8d73-4f1c-85ed-2714c38ab381")
+			(uuid "06c1678b-f68a-4bb4-8e88-8d8ab315f31e")
 		)
 		(fp_line
 			(start 30.48 -8.89)
@@ -4855,7 +4855,7 @@
 				(type solid)
 			)
 			(layer "F.SilkS")
-			(uuid "d4388207-8733-4227-9682-dff961fb12f4")
+			(uuid "3f925611-8e26-4a7f-aa88-8032bc86741b")
 		)
 		(fp_line
 			(start 30.48 -6.35)
@@ -4865,7 +4865,7 @@
 				(type solid)
 			)
 			(layer "F.SilkS")
-			(uuid "3e40883f-4b78-48d4-9b8d-409f66d8a7cd")
+			(uuid "9948e556-7006-45c8-9c70-140d636c46d3")
 		)
 		(fp_line
 			(start 30.48 -5.08)
@@ -4875,7 +4875,7 @@
 				(type solid)
 			)
 			(layer "F.SilkS")
-			(uuid "4a92b880-8635-48b3-a038-dd89a706e961")
+			(uuid "67f2b228-ebb3-42a4-adf2-84becfa7c173")
 		)
 		(fp_line
 			(start 30.48 8.89)
@@ -4885,7 +4885,7 @@
 				(type solid)
 			)
 			(layer "F.SilkS")
-			(uuid "85682fef-afa8-4694-bbbb-1a17894bbf8f")
+			(uuid "520f1ae7-e9eb-4bdb-b814-762598900560")
 		)
 		(fp_circle
 			(center 12.065 0)
@@ -4896,7 +4896,7 @@
 			)
 			(fill no)
 			(layer "F.SilkS")
-			(uuid "58410215-d9b6-4a5f-85e0-10713e11d568")
+			(uuid "584dbc85-22e1-499c-a2ec-337f469ea606")
 		)
 		(fp_poly
 			(pts
@@ -4908,7 +4908,7 @@
 			)
 			(fill yes)
 			(layer "F.SilkS")
-			(uuid "aba75fff-b366-4b9a-b770-534772b787c1")
+			(uuid "f5563562-b51e-4e02-ba04-fb3aef97bc9d")
 		)
 		(fp_poly
 			(pts
@@ -4920,7 +4920,7 @@
 			)
 			(fill yes)
 			(layer "F.SilkS")
-			(uuid "ecba29d5-394b-4922-a929-0f00a6c90139")
+			(uuid "af90b95d-b2a1-411d-b196-f9e5a3e9e60c")
 		)
 		(fp_poly
 			(pts
@@ -4932,7 +4932,7 @@
 			)
 			(fill yes)
 			(layer "F.SilkS")
-			(uuid "b1a5cb0b-853e-4a3b-86d2-238e3ae70a42")
+			(uuid "fc7bccc9-1593-4e72-956a-c32d45205293")
 		)
 		(fp_poly
 			(pts
@@ -4944,7 +4944,7 @@
 			)
 			(fill yes)
 			(layer "F.SilkS")
-			(uuid "0c1815de-0352-462f-a368-a618b9ae5c0d")
+			(uuid "ce54d893-44a7-4dd7-b656-f683643bc123")
 		)
 		(fp_poly
 			(pts
@@ -4956,7 +4956,7 @@
 			)
 			(fill yes)
 			(layer "F.SilkS")
-			(uuid "8fb45fac-e33f-4e8a-8a4d-48f54d60c793")
+			(uuid "432d20de-2b7e-45ac-a038-565c53d80061")
 		)
 		(fp_poly
 			(pts
@@ -4968,7 +4968,7 @@
 			)
 			(fill yes)
 			(layer "F.SilkS")
-			(uuid "6c1b1b50-6576-44f7-9eec-c5d67d49c921")
+			(uuid "9715d710-7e3d-4640-9d1a-c2ac19b3ebe5")
 		)
 		(fp_poly
 			(pts
@@ -4980,7 +4980,7 @@
 			)
 			(fill yes)
 			(layer "F.SilkS")
-			(uuid "70e9dce1-f5c9-49cb-a979-c8bfbf0ac998")
+			(uuid "24de282e-d844-444f-b65f-e715d9404ea8")
 		)
 		(fp_poly
 			(pts
@@ -4992,7 +4992,7 @@
 			)
 			(fill yes)
 			(layer "F.SilkS")
-			(uuid "4c6ab58f-b09c-45c0-b784-68d097a7c483")
+			(uuid "7e1cac24-c379-4e4d-9ceb-6e38cf948c32")
 		)
 		(fp_text user "MIMXRT1062"
 			(at -1.27 0 270)
@@ -5000,7 +5000,7 @@
 			(uuid "a1940322-cd3f-419f-a0e1-7cb28042f35d")
 			(effects
 				(font
-					(size 0.8 0.8)
+					(size 0.7 0.7)
 					(thickness 0.15)
 				)
 			)
@@ -5011,7 +5011,7 @@
 			(uuid "adf7d149-5ee3-43cc-b0dc-21a60636bd66")
 			(effects
 				(font
-					(size 0.8 0.8)
+					(size 0.7 0.7)
 					(thickness 0.15)
 				)
 			)
@@ -5635,7 +5635,7 @@
 		)
 		(property ki_fp_filters "Pololu*Breakout*15.2x20.3mm*")
 		(path "/c8ca89ee-843e-4834-939f-62b4454cbdcf")
-		(sheetname "Root")
+		(sheetname "/")
 		(sheetfile "RobocupSwinderPCB.kicad_sch")
 		(attr through_hole)
 		(fp_line
@@ -6080,7 +6080,7 @@
 		)
 		(property ki_fp_filters "BarrelJack*")
 		(path "/e4ae0eee-a9b3-44aa-b9ad-476c28217c3a")
-		(sheetname "Root")
+		(sheetname "/")
 		(sheetfile "RobocupSwinderPCB.kicad_sch")
 		(attr through_hole)
 		(fp_line
@@ -6326,7 +6326,7 @@
 		)
 		(property ki_fp_filters "Choke_* *Coil* Inductor_* L_*")
 		(path "/f3ec28aa-62a0-4433-8d4a-f8a57b02ff82")
-		(sheetname "Root")
+		(sheetname "/")
 		(sheetfile "RobocupSwinderPCB.kicad_sch")
 		(attr smd)
 		(fp_line
@@ -6609,7 +6609,7 @@
 		)
 		(property ki_fp_filters "PinHeader*P2.54mm*Vertical* TerminalBlock* Motor*")
 		(path "/448b7840-13a1-4bb0-91a7-a7c327bc4627")
-		(sheetname "Root")
+		(sheetname "/")
 		(sheetfile "RobocupSwinderPCB.kicad_sch")
 		(attr through_hole)
 		(fp_line
@@ -7074,7 +7074,7 @@
 		)
 		(property ki_fp_filters "C_*")
 		(path "/f4007ea6-9ce9-4551-bc6e-5a9f1152e4d4")
-		(sheetname "Root")
+		(sheetname "/")
 		(sheetfile "RobocupSwinderPCB.kicad_sch")
 		(attr smd)
 		(fp_line
@@ -7275,7 +7275,7 @@
 		)
 		(property ki_fp_filters "TO?220*")
 		(path "/4e67e4c3-cbb7-49a4-9104-68dc61682020")
-		(sheetname "Root")
+		(sheetname "/")
 		(sheetfile "RobocupSwinderPCB.kicad_sch")
 		(attr smd)
 		(fp_line
@@ -7540,7 +7540,7 @@
 		)
 		(property ki_fp_filters "MountingHole*Pad*")
 		(path "/29b99000-1999-474b-8208-53c39ad38b9c")
-		(sheetname "Root")
+		(sheetname "/")
 		(sheetfile "RobocupSwinderPCB.kicad_sch")
 		(attr exclude_from_pos_files exclude_from_bom)
 		(fp_circle
@@ -8414,7 +8414,7 @@
 		)
 		(property ki_fp_filters "CP_*")
 		(path "/9cb85ccc-4ea6-4930-bc8a-cbbbdd5b16f8")
-		(sheetname "Root")
+		(sheetname "/")
 		(sheetfile "RobocupSwinderPCB.kicad_sch")
 		(attr through_hole)
 		(fp_line
@@ -10140,7 +10140,7 @@
 		)
 		(property ki_fp_filters "PinHeader*P2.54mm*Vertical* TerminalBlock* Motor*")
 		(path "/7ccc22d4-5981-4f75-a18e-e05cce0a63cf")
-		(sheetname "Root")
+		(sheetname "/")
 		(sheetfile "RobocupSwinderPCB.kicad_sch")
 		(attr through_hole)
 		(fp_line
@@ -10604,7 +10604,7 @@
 			)
 		)
 		(path "/426ab4ee-e695-4ff4-9c31-d633e89f5c7c")
-		(sheetname "Root")
+		(sheetname "/")
 		(sheetfile "RobocupSwinderPCB.kicad_sch")
 		(attr through_hole)
 		(fp_line
@@ -10987,7 +10987,7 @@
 			(drill 0.95)
 			(layers "*.Cu" "*.Mask")
 			(remove_unused_layers no)
-			(net 29 "/RE_SW_Pin_21")
+			(net 31 "/RE_CLK_Pin_23")
 			(pinfunction "CLK")
 			(pintype "output")
 			(uuid "00bb7ebb-10a5-47fe-b18c-a87f0620538d")
@@ -11009,7 +11009,7 @@
 			(drill 0.95)
 			(layers "*.Cu" "*.Mask")
 			(remove_unused_layers no)
-			(net 31 "/RE_CLK_Pin_23")
+			(net 29 "/RE_SW_Pin_21")
 			(pinfunction "SW")
 			(pintype "output")
 			(uuid "770ca236-370c-4e90-aa7b-f9cac7211141")
@@ -11083,7 +11083,7 @@
 		)
 		(property ki_fp_filters "R_*")
 		(path "/59a9fd6e-8148-421e-90e8-6aa7b5bebd56")
-		(sheetname "Root")
+		(sheetname "/")
 		(sheetfile "RobocupSwinderPCB.kicad_sch")
 		(attr smd)
 		(fp_line
@@ -11284,7 +11284,7 @@
 		)
 		(property ki_fp_filters "C_*")
 		(path "/f083426b-b887-4ffb-87b7-a6efbbf64b10")
-		(sheetname "Root")
+		(sheetname "/")
 		(sheetfile "RobocupSwinderPCB.kicad_sch")
 		(attr smd)
 		(fp_line
@@ -11485,7 +11485,7 @@
 		)
 		(property ki_fp_filters "*Fuse*")
 		(path "/84ba0b97-c2b7-4b63-a950-b154db6f4ed3")
-		(sheetname "Root")
+		(sheetname "/")
 		(sheetfile "RobocupSwinderPCB.kicad_sch")
 		(attr smd)
 		(fp_line
@@ -11686,7 +11686,7 @@
 		)
 		(property ki_fp_filters "C_*")
 		(path "/5b044024-4bf8-4563-810d-c2e5bf7c149d")
-		(sheetname "Root")
+		(sheetname "/")
 		(sheetfile "RobocupSwinderPCB.kicad_sch")
 		(attr smd)
 		(fp_line
@@ -11887,7 +11887,7 @@
 		)
 		(property ki_fp_filters "R_*")
 		(path "/2cbd57df-9c13-4031-88b5-fd2a9861ddcb")
-		(sheetname "Root")
+		(sheetname "/")
 		(sheetfile "RobocupSwinderPCB.kicad_sch")
 		(attr smd)
 		(fp_line
@@ -12088,7 +12088,7 @@
 		)
 		(property ki_fp_filters "LED* LED_SMD:* LED_THT:*")
 		(path "/42588f77-5ab1-4aaf-bcd6-ac56124d3b79")
-		(sheetname "Root")
+		(sheetname "/")
 		(sheetfile "RobocupSwinderPCB.kicad_sch")
 		(attr smd)
 		(fp_line
@@ -12311,7 +12311,7 @@
 		)
 		(property ki_fp_filters "Pololu*Breakout*15.2x20.3mm*")
 		(path "/a9670781-98e2-43d5-8df8-43ef69620be6")
-		(sheetname "Root")
+		(sheetname "/")
 		(sheetfile "RobocupSwinderPCB.kicad_sch")
 		(attr through_hole)
 		(fp_line
@@ -12760,7 +12760,7 @@
 		)
 		(property ki_fp_filters "MountingHole*Pad*")
 		(path "/8f20806a-fc38-47cb-8d69-ffe956a90ed8")
-		(sheetname "Root")
+		(sheetname "/")
 		(sheetfile "RobocupSwinderPCB.kicad_sch")
 		(attr exclude_from_pos_files exclude_from_bom)
 		(fp_circle
