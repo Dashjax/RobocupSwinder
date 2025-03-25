@@ -6550,7 +6550,7 @@
 		)
 		(uuid "27a61d10-a9aa-4358-8eee-d3ce20f4e2e1")
 	)
-	(label "Feed_FLT_Pin_21"
+	(label "Feed_FLT_Pin_29"
 		(at 276.86 132.08 0)
 		(effects
 			(font
@@ -6660,7 +6660,7 @@
 		)
 		(uuid "62bdcfd4-c0cb-4215-abcd-0c8a37b83bab")
 	)
-	(label "Coil_FLT_Pin_22"
+	(label "Coil_FLT_Pin_30"
 		(at 276.86 182.88 0)
 		(effects
 			(font
@@ -6770,7 +6770,7 @@
 		)
 		(uuid "dc1a23af-c213-4091-81f8-940724aad37b")
 	)
-	(label "Feed_FLT_Pin_21"
+	(label "Feed_FLT_Pin_29"
 		(at 163.83 99.06 0)
 		(effects
 			(font
@@ -6820,7 +6820,7 @@
 		)
 		(uuid "e7bd1931-30d3-423d-b3f3-68ca728af632")
 	)
-	(label "Coil_FLT_Pin_22"
+	(label "Coil_FLT_Pin_30"
 		(at 163.83 101.6 0)
 		(effects
 			(font
