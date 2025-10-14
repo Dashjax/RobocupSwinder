@@ -5,7 +5,7 @@
 //Pins setup
 const int coil_motor_step = 36, coil_motor_dir = 35, coil_motor_fault = 30, coil_motor_sleep = 37;
 const int feed_motor_step = 39, feed_motor_dir = 38, feed_motor_fault = 29, feed_motor_sleep = 40;
-const int rbutton = 23, ra = 22, rb = 21;
+const int rbutton = 21, ra = 22, rb = 23;
 const int limit_switch_start = 7, limit_switch_end = 8;
 
 //Define LCD
@@ -469,14 +469,16 @@ void spin() {
 
   //Set starting direction
   digitalWrite(coil_motor_dir, HIGH);
-  digitalWrite(feed_motor_dir, LOW);
+  digitalWrite(feed_motor_dir, HIGH);
 
   //Zero carriage
   while (true) {
     //Check for motor fault
+
     if (digitalRead(coil_motor_fault) == LOW || digitalRead(feed_motor_fault) == LOW) {
       motor_fault();
     }
+
     if (digitalRead(limit_switch_start) == HIGH) {
       break;
     } else {
@@ -485,15 +487,17 @@ void spin() {
   }
 
   //Reverse carriage direction
-  digitalWrite(feed_motor_dir, HIGH);
+  digitalWrite(feed_motor_dir, LOW);
   delay(100);
 
   //Move to start position
   while (carriage_pos < 0) {
     //Check for motor fault
+
     if (digitalRead(coil_motor_fault) == LOW || digitalRead(feed_motor_fault) == LOW) {
       motor_fault();
     }
+
     step_feed();
     carriage_pos += FEED_PER_STEP;
   }
@@ -512,9 +516,11 @@ void spin() {
 
   while (num_step_coil > 0) { //Process loop
     //Check for motor fault
+    
     if (digitalRead(coil_motor_fault) == LOW || digitalRead(feed_motor_fault) == LOW) {
       motor_fault();
     }
+  
     //Read Button
     if (digitalRead(rbutton) == LOW) {
       delay(BUTTON_DELAY);
@@ -530,11 +536,11 @@ void spin() {
 
     //Reverse carriage
     if (carriage_pos > length - PADDING) {
-      digitalWrite(feed_motor_dir, LOW);
+      digitalWrite(feed_motor_dir, HIGH);
       carriage_factor = -1;
     }
     if (carriage_pos < PADDING) {
-      digitalWrite(feed_motor_dir, HIGH);
+      digitalWrite(feed_motor_dir, LOW);
       carriage_factor = 1;
     }
 
