@@ -33,6 +33,11 @@ SolenoidError Solenoid::setInductance(uint32_t inductance) {
     return SolenoidError::NO_ERROR;
 }
 
+SolenoidError Solenoid::setGauge(WireGauge gauge) {
+    this->_gauge = gauge;
+    return SolenoidError::NO_ERROR;
+}
+
 uint32_t Solenoid::getLength() {
     return _length;
 }
@@ -43,6 +48,10 @@ uint32_t Solenoid::getRadius() {
 
 uint32_t Solenoid::getInductance() {
     return _inductance;
+}
+
+WireGauge Solenoid::getGauge() {
+    return _gauge;
 }
 
 void Solenoid::setPreset(Preset preset) {
