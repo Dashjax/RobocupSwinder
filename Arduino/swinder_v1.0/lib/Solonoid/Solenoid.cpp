@@ -87,12 +87,56 @@ uint32_t Solenoid::turnsPerPass() {
     return (_length * 100) / _gauge;
 }
 
-String lengthString() {
-    
+String Solenoid::lengthString() {
+    return formatVal(_length, MAX_LENGTH);
+}
+
+String Solenoid::radiusString() {
+    return formatVal(_radius, MAX_RADIUS);
+}
+
+String Solenoid::inductanceString() {
+    return formatVal(_inductance, MAX_INDUCTANCE);
+}
+
+String Solenoid::gaugeString() {
+    switch(_gauge) {
+        case WireGauge::AWG18: return "AWG18";
+        case WireGauge::AWG19: return "AWG19";
+        case WireGauge::AWG20: return "AWG20";
+        case WireGauge::AWG21: return "AWG21";
+        case WireGauge::AWG22: return "AWG22";
+        case WireGauge::AWG23: return "AWG23";
+        case WireGauge::AWG24: return "AWG24";
+        case WireGauge::AWG25: return "AWG25";
+        case WireGauge::AWG26: return "AWG26";
+        case WireGauge::AWG27: return "AWG27";
+        case WireGauge::AWG28: return "AWG28";
+        case WireGauge::AWG29: return "AWG29";
+        case WireGauge::AWG30: return "AWG30";
+    }
 }
 
 // PRIVATE
 
+String formatVal(uint32_t num, uint32_t max) {
+  uint8_t maxLength = String(max).length() + 1; // Cannot be greater than 10
+  String returnString = "";
+  String numberString = String(num);
+
+  // Add leading zeros to match length
+  for (size_t i = 0; i < maxLength - (numberString.length() + 1); i++) {
+      returnString += "0";
+  }
+  
+  // Add decimal point with 2 positions of precision
+  returnString += numberString.substring(0, numberString.length() - 3);
+  returnString +=  ".";
+  returnString += numberString.substring(numberString.length() - 2);
+
+  return returnString;
+}
+
 void Solenoid::updateTurns() {
-    this->_numTurns = sqrt((_inductance * _length) / (_radius * _radius * K)) * CORRECTION_VALUE;
+    this->_numTurns = round(sqrt((_inductance * _length) / (_radius * _radius * K))) * UT_SCALING_FACTOR;
 }
