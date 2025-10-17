@@ -87,6 +87,10 @@ uint32_t Solenoid::turnsPerPass() {
     return (_length * 100) / _gauge;
 }
 
+String lengthString() {
+    
+}
+
 // PRIVATE
 
 void Solenoid::updateTurns() {
