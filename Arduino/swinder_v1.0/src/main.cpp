@@ -35,8 +35,16 @@
 #define VERSION "V1.0"
 #define BUTTON_DELAY 200
 
+enum Tasks {
+  ChoosePreset,
+  ValEdit,
+  ConfirmScreen,
+  Spin,
+  End,
+};
+
 // Variables
-uint8_t task = 0;
+Tasks task = Tasks::ChoosePreset;
 uint32_t length = 500; // cm * 100
 uint32_t inductance = 4000; // mH * 100
 uint32_t radius = 50; // cm * 100
@@ -110,14 +118,14 @@ void loop() {
   -Restart
   */
   switch (task) {
-    case 0:
+    case Tasks::ChoosePreset:
       choosePreset();
       break;
-    case 1:
+    case Tasks::ValEdit:
       valSelect();
       break;
     default:
-      task = 0;
+      task = Tasks::ChoosePreset;
   }
 }
 
@@ -181,7 +189,7 @@ void choosePreset() {
       }
       
       // Set task to val editing
-      task = 1;
+      task = Tasks::ValEdit;
 
       // Reset lcd
       lcd.noCursor();
@@ -265,7 +273,7 @@ void valSelect() {
           valEditor(&radius, MAX_RADIUS);
           break;
         case 3:
-          task = 2;
+          task = Tasks::ConfirmScreen;
           return;
       }
     }
