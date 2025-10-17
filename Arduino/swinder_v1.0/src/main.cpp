@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include <Solenoid.hpp>
 #include <Encoder.h>
 #include <LiquidCrystal_I2C.h>
 
@@ -33,9 +34,6 @@
 // Misc constants
 #define VERSION "V1.0"
 #define BUTTON_DELAY 200
-#define MAX_LENGTH 2000 // cm * 100
-#define MAX_INDUCTANCE 1000000 // mH * 100
-#define MAX_RADIUS 500 // cm * 100
 
 // Variables
 uint8_t task = 0;
@@ -49,6 +47,7 @@ LiquidCrystal_I2C lcd(0x27, 16, 2);
 
 // Define Rotary Encoder
 Encoder encoder(RE_A_PIN, RE_B_PIN);
+
 
 // Function definition
 void choosePreset();
@@ -210,10 +209,12 @@ void choosePreset() {
 }
 
 void valSelect() {
+  // Local vars
   uint8_t screenIndex = 0;
   bool screenChange = true;
   long reOldPosition = encoder.read() / 4;
 
+  // Setup screen
   lcd.clear();
 
   while (true) {
@@ -293,25 +294,21 @@ void valEditor(uint32_t* val, uint32_t max) {
 }
 
 String formatVal(uint32_t num, uint32_t max) {
-  uint8_t l = String(max).length() + 1;
-  String s = "";
-  String n = String(num);
+  uint8_t maxLength = String(max).length() + 1; // Cannot be greater than 10
+  String returnString = "";
+  String numberString = String(num);
 
   // Add leading zeros to match length
-  for (size_t i = 0; i < l - (n.length() + 1); i++) {
-      s += "0";
+  for (size_t i = 0; i < maxLength - (numberString.length() + 1); i++) {
+      returnString += "0";
   }
-  uint8_t t = 0;
-  for (size_t i = 0; i < n.length() + 1; i++) {
-    if (i == n.length() - 2) {
-      s += ".";
-      t = 1;
-    } else {
-      s += n[i - t];
-    }
-  }
+  
+  // Add decimal point with 2 positions of precision
+  returnString += numberString.substring(0, numberString.length() - 3);
+  returnString +=  ".";
+  returnString += numberString.substring(numberString.length() - 2);
 
-  return s;
+  return returnString;
 }
 
 uint32_t calcTurns() {
