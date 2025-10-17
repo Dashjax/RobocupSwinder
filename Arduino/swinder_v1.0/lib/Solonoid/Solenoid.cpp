@@ -54,6 +54,11 @@ WireGauge Solenoid::getGauge() {
     return _gauge;
 }
 
+uint32_t Solenoid::getTurns() {
+    this->updateTurns();
+    return _numTurns;
+}
+
 void Solenoid::setPreset(Preset preset) {
     switch (preset) {
         case Preset::A:
@@ -112,6 +117,10 @@ String Solenoid::radiusString() {
 
 String Solenoid::inductanceString() {
     return formatVal(_inductance, MAX_INDUCTANCE);
+}
+
+String Solenoid::turnsString() {
+    return String(this->getTurns());
 }
 
 String Solenoid::gaugeString() {

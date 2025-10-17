@@ -56,13 +56,15 @@ LiquidCrystal_I2C lcd(0x27, 16, 2);
 // Define Rotary Encoder
 Encoder encoder(RE_A_PIN, RE_B_PIN);
 
+// Define solenoid
+Solenoid solenoid = Solenoid();
 
 // Function definition
 void choosePreset();
 void valSelect();
 String formatVal(uint32_t, uint32_t);
 uint32_t calcTurns();
-void valEditor(uint32_t*, uint32_t);
+void valEditor(ValSelect);
 
 void setup() {
   #if DEBUG 
@@ -80,6 +82,9 @@ void setup() {
   // Initialize Rotary Encoder
   encoder.write(0);
   pinMode(RE_BUTTON_PIN, INPUT);
+
+  // Initialize Solenoid
+  solenoid.begin(Preset::None);
 
   // Initialize Limit Switches
   pinMode(LS_START_PIN, INPUT);
@@ -163,29 +168,19 @@ void choosePreset() {
       // Set preset
       switch (cursorIndex) {
         case 1:
-          inductance = 4000;
-          length = 500;
-          radius = 50;
+          solenoid.setPreset(Preset::A);
           break;
         case 3:
-          inductance = 8000;
-          length = 500;
-          radius = 50;
+          solenoid.setPreset(Preset::B);
           break;
         case 5:
-          inductance = 4000;
-          length = 300;
-          radius = 50;
+          solenoid.setPreset(Preset::C);
           break;
         case 7:
-          inductance = 10;
-          length = 100;
-          radius = 100;
+          solenoid.setPreset(Preset::D);
           break;
         default:
-          inductance = 0;
-          length = 0;
-          radius = 0;
+          solenoid.setPreset(Preset::None);
       }
       
       // Set task to val editing
@@ -229,29 +224,28 @@ void valSelect() {
     if (screenChange) {
       lcd.clear();
       switch (screenIndex) {
-        case 0:
-          lcd.setCursor(0, 0);
-          lcd.print("Inductance (mH)");
-          lcd.setCursor(0, 1);
-          lcd.print(formatVal(inductance, MAX_INDUCTANCE));
-          break;
-        case 1: //Length (cm)
+        case 0: // Length (cm)
           lcd.setCursor(0, 0);
           lcd.print("Length (cm)");
           lcd.setCursor(0, 1);
-          lcd.print(formatVal(length, MAX_LENGTH));
+          lcd.print(solenoid.lengthString());
           break;
-        case 2: //Radius (cm)
+        case 1: // Radius (cm)
           lcd.setCursor(0, 0);
           lcd.print("Radius (cm)");
           lcd.setCursor(0, 1);
-          lcd.print(formatVal(radius, MAX_RADIUS));
+          lcd.print(solenoid.radiusString());
           break;
-        case 3: //Confirmation Screen
-          numTurns = calcTurns();
+        case 2: // Inductance (mH)
+          lcd.setCursor(0, 0);
+          lcd.print("Inductance (mH)");
+          lcd.setCursor(0, 1);
+          lcd.print(solenoid.inductanceString());
+          break;
+        case 3: // Confirmation Screen
           lcd.setCursor(0, 0);
           lcd.print("Turns: ");
-          lcd.print(numTurns);
+          lcd.print(solenoid.turnsString());
           lcd.setCursor(0, 1);
           lcd.print("Confirm");
           break;
@@ -264,13 +258,13 @@ void valSelect() {
       delay(BUTTON_DELAY);
       switch (screenIndex) {
         case 0:
-          valEditor(&inductance, MAX_INDUCTANCE);
+          valEditor(ValSelect::LENGTH);
           break;
         case 1:
-          valEditor(&length, MAX_LENGTH);
+          valEditor(ValSelect::RADIUS);
           break;
         case 2:
-          valEditor(&radius, MAX_RADIUS);
+          valEditor(ValSelect::INDUCTANCE);
           break;
         case 3:
           task = Tasks::ConfirmScreen;
@@ -294,34 +288,25 @@ void valSelect() {
   }
 }
 
-void valEditor(uint32_t* val, uint32_t max) {
-  lcd.clear();
-  lcd.setCursor(0, 0);
-  lcd.print("TODO");
-  while (true) {}
-}
-
-String formatVal(uint32_t num, uint32_t max) {
-  uint8_t maxLength = String(max).length() + 1; // Cannot be greater than 10
-  String returnString = "";
-  String numberString = String(num);
-
-  // Add leading zeros to match length
-  for (size_t i = 0; i < maxLength - (numberString.length() + 1); i++) {
-      returnString += "0";
-  }
-  
-  // Add decimal point with 2 positions of precision
-  returnString += numberString.substring(0, numberString.length() - 3);
-  returnString +=  ".";
-  returnString += numberString.substring(numberString.length() - 2);
-
-  return returnString;
-}
-
-uint32_t calcTurns() {
-  //TODO
- return 3;
+void valEditor(ValSelect val) {
+  lcd.setCursor(0,1);
+  lcd.cursor_on();
+  lcd.blink_on();
+    switch(val) {
+      case ValSelect::LENGTH:
+        uint8_t size = solenoid.lengthString().length();
+        
+      break;
+      case ValSelect::RADIUS:
+      
+      break;
+      case ValSelect::INDUCTANCE:
+      
+      break;
+      case ValSelect::GAUGE:
+      
+      break;
+    }
 }
 
 /*
