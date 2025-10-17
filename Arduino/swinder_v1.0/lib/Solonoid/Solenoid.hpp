@@ -24,12 +24,20 @@ enum Preset {
     Debug,
 };
 
-enum WireGauge {
-    AWG20,
-    AWG22,
-    AWG24,
-    AWG26,
-    AWG28,
+enum WireGauge { // Diameter
+    AWG18 = 1020, // 1.020mm
+    AWG19 = 910, // 0.910mm
+    AWG20 = 810, // 0.810mm
+    AWG21 = 720, // 0.720mm
+    AWG22 = 643, // 0.643mm
+    AWG23 = 574, // 0.574mm
+    AWG24 = 511, // 0.511mm
+    AWG25 = 450, // 0.450mm
+    AWG26 = 404, // 0.404mm
+    AWG27 = 361, // 0.361mm
+    AWG28 = 320, // 0.320mm
+    AWG29 = 290, // 0.290mm
+    AWG30 = 254, // 0.254mm
 };
 
 class Solenoid {
@@ -116,7 +124,7 @@ private:
     uint32_t _length = 0;
     uint32_t _radius = 0;
     uint32_t _inductance = 0;
-    WireGauge _gauge = WireGauge::AWG20;
+    WireGauge _gauge = WireGauge::AWG28;
     uint32_t _numTurns = 0;
 };
 
