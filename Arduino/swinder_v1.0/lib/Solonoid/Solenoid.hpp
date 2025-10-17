@@ -24,7 +24,7 @@ enum Preset {
     Debug,
 };
 
-enum WireGauge { // Diameter
+enum WireGauge { // Diameter, divide by 1000000 to get m
     AWG18 = 1020, // 1.020mm
     AWG19 = 910, // 0.910mm
     AWG20 = 810, // 0.810mm
@@ -111,6 +111,13 @@ public:
      * @param preset selected preset
      */
     void setPreset(Preset preset);
+
+    /**
+     * @brief Returns the number of turns that can fit in one pass across the solenoid
+     * 
+     * @returns number of turns per pass
+     */
+    uint32_t turnsPerPass();
 
 private:
     /**

@@ -79,6 +79,14 @@ void Solenoid::setPreset(Preset preset) {
     }
 }
 
+uint32_t Solenoid::turnsPerPass() {
+    if (_length == 0) {
+        return 0;
+    }
+    // (_length / 10000) / (_gauge / 1000000)
+    return (_length * 100) / _gauge;
+}
+
 // PRIVATE
 
 void Solenoid::updateTurns() {
