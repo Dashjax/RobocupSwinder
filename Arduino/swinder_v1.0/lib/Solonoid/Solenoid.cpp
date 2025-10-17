@@ -60,31 +60,37 @@ void Solenoid::setPreset(Preset preset) {
             this->setLength((uint32_t) 500); // 5cm
             this->setRadius((uint32_t) 50); // 0.5cm
             this->setInductance((uint32_t) 4000); // 40mH
+            this->setGauge(WireGauge::AWG24);
         break;
         case Preset::B:
             this->setLength((uint32_t) 500); // 5cm
             this->setRadius((uint32_t) 50); // 0.5cm
             this->setInductance((uint32_t) 8000); // 80mH
+            this->setGauge(WireGauge::AWG24);
         break;
         case Preset::C:
             this->setLength((uint32_t) 300); // 3cm
             this->setRadius((uint32_t) 50); // 0.5cm
             this->setInductance((uint32_t) 4000); // 40mH
+            this->setGauge(WireGauge::AWG24);
         break;
         case Preset::D:
             this->setLength((uint32_t) 100); // 1cm
             this->setRadius((uint32_t) 100); // 1cm
             this->setInductance((uint32_t) 10); // 0.1mH
+            this->setGauge(WireGauge::AWG24);
         break;
         case Preset::None:
             this->setLength((uint32_t) 0); // 0cm
             this->setRadius((uint32_t) 0); // 0cm
             this->setInductance((uint32_t) 0); // 0mH
+            this->setGauge(WireGauge::AWG24);
         break;
         default: // debug case
             this->setLength((uint32_t) 1234); // 0.1234m
             this->setRadius((uint32_t) 123); // 0.0123m
             this->setInductance((uint32_t) 1234567); // 12.34567H
+            this->setGauge(WireGauge::AWG18);
     }
 }
 
@@ -93,7 +99,7 @@ uint32_t Solenoid::turnsPerPass() {
         return 0;
     }
     // (_length / 10000) / (_gauge / 1000000)
-    return (_length * 100) / _gauge;
+    return (_length / _gauge) * 100;
 }
 
 String Solenoid::lengthString() {
