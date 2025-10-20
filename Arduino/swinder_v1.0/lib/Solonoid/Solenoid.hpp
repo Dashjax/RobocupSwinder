@@ -7,8 +7,8 @@
 #define MAX_INDUCTANCE 4000000 // 40H stored with 0.01mH precision. Divide by 100000
 #define MAX_RADIUS 500 // 0.005m stored with 0.01cm precision. Divide by 10000
 
-#define CORRECTION_VALUE 10000000 // TODO
-#define K 394784
+#define UT_SCALING_FACTOR 100000 // 10^5
+#define K 394784 // K = 4 * pi^2 * 10^-7 = ~394784 * 10^-11 for ~1.76 * 10^12 error
 
 enum SolenoidError {
     NO_ERROR = 0,
@@ -76,6 +76,13 @@ public:
     uint32_t getInductance();
 
     /**
+     * @brief Getter for solenoid wire gauge
+     * 
+     * @returns gauge of solenoid
+     */
+    WireGauge getGauge();
+
+    /**
      * @brief Getter for number of turns required for solenoid
      * 
      * Only updates turns count on call
@@ -106,6 +113,13 @@ public:
     SolenoidError setInductance(uint32_t inductance);
 
     /**
+     * @brief Setter for solenoid wire gauge
+     * 
+     * @returns VAL_ERROR if input value is outside of expected range
+     */
+    SolenoidError setGauge(WireGauge gauge);
+
+    /**
      * @brief Updates all values of solenoid to predefined presets
      * 
      * @param preset selected preset
@@ -119,19 +133,62 @@ public:
      */
     uint32_t turnsPerPass();
 
+    /**
+     * @brief Returns the string formatted version of length in cm.
+     * 
+     * @returns length as string
+     */
+    String lengthString();
+
+    /**
+     * @brief Returns the string formatted version of radius in cm.
+     * 
+     * @returns radius as string
+     */
+    String radiusString();
+
+    /**
+     * @brief Returns the string formatted version of inductance in mH.
+     * 
+     * @returns inductance as string
+     */
+    String inductanceString();
+
+    /**
+     * @brief Returns the string formatted version of wire gauge.
+     * 
+     * @returns gauge as string
+     */
+    String gaugeString();
+
+    /**
+     * @brief Returns the string formatted version of turn count
+     * 
+     * @returns turn count string
+     */
+    String turnsString();
+
 private:
     /**
      * @brief Calculates the number of turns required for solenoid
      * 
      * Equation: sqrt((inductance * length) / (R^2 * K))
-     * K = 4 * pi^2 * 10^-7 = ~394784 * 10^-11 for ~1.76 * 10^12 error
      */
     void updateTurns();
+
+    /**
+     * @brief General format from converting int values to strings
+     * 
+     * @param num int to be formatted
+     * @param max maximum value num can be
+     * @returns string format of given value
+     */
+    String formatVal(uint32_t num, uint32_t max);
 
     uint32_t _length = 0;
     uint32_t _radius = 0;
     uint32_t _inductance = 0;
-    WireGauge _gauge = WireGauge::AWG28;
+    WireGauge _gauge = WireGauge::AWG24;
     uint32_t _numTurns = 0;
 };
 

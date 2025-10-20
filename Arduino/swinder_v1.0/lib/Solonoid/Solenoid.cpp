@@ -2,7 +2,6 @@
 
 Solenoid::Solenoid() {}
 
-
 // PUBLIC
 
 void Solenoid::begin(Preset preset) {
@@ -108,15 +107,15 @@ uint32_t Solenoid::turnsPerPass() {
 }
 
 String Solenoid::lengthString() {
-    return formatVal(_length, MAX_LENGTH);
+    return this->formatVal(_length, MAX_LENGTH);
 }
 
 String Solenoid::radiusString() {
-    return formatVal(_radius, MAX_RADIUS);
+    return this->formatVal(_radius, MAX_RADIUS);
 }
 
 String Solenoid::inductanceString() {
-    return formatVal(_inductance, MAX_INDUCTANCE);
+    return this->formatVal(_inductance, MAX_INDUCTANCE);
 }
 
 String Solenoid::turnsString() {
@@ -138,28 +137,39 @@ String Solenoid::gaugeString() {
         case WireGauge::AWG28: return "AWG28";
         case WireGauge::AWG29: return "AWG29";
         case WireGauge::AWG30: return "AWG30";
+        default: return "Error";
     }
 }
 
 // PRIVATE
-
-String formatVal(uint32_t num, uint32_t max) {
+String Solenoid::formatVal(uint32_t num, uint32_t max) {
   uint8_t maxLength = String(max).length() + 1; // Cannot be greater than 10
   String returnString = "";
   String numberString = String(num);
-
+  
   // Add leading zeros to match length
-  for (size_t i = 0; i < maxLength - (numberString.length() + 1); i++) {
-      returnString += "0";
+  for (size_t i = 0; i < maxLength - numberString.length(); i++) {
+    if (i == maxLength - 3) {
+        returnString += ".";
+    } else {
+        returnString += "0";
+    }
   }
   
-  // Add decimal point with 2 positions of precision
-  returnString += numberString.substring(0, numberString.length() - 3);
-  returnString +=  ".";
-  returnString += numberString.substring(numberString.length() - 2);
+  // Add actual value
+  // Short value case
+  if (numberString.length() < 3) {
+    returnString += numberString;
+    return returnString;
+  }
 
+  // Split case
+  returnString += numberString.substring(0, numberString.length() - 2);
+  returnString += ".";
+  returnString += numberString.substring(numberString.length() - 2);
   return returnString;
 }
+
 
 void Solenoid::updateTurns() {
     this->_numTurns = round(sqrt((_inductance * _length) / (_radius * _radius * K))) * UT_SCALING_FACTOR;

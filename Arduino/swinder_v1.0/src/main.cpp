@@ -62,9 +62,7 @@ Solenoid solenoid = Solenoid();
 // Function definition
 void choosePreset();
 void valSelect();
-String formatVal(uint32_t, uint32_t);
-uint32_t calcTurns();
-void valEditor(ValSelect);
+
 
 void setup() {
   #if DEBUG 
@@ -242,7 +240,13 @@ void valSelect() {
           lcd.setCursor(0, 1);
           lcd.print(solenoid.inductanceString());
           break;
-        case 3: // Confirmation Screen
+        case 3:
+          lcd.setCursor(0, 0);
+          lcd.print("Wire Gauge");
+          lcd.setCursor(0, 1);
+          lcd.print(solenoid.gaugeString());
+          break;
+        case 4: // Confirmation Screen
           lcd.setCursor(0, 0);
           lcd.print("Turns: ");
           lcd.print(solenoid.turnsString());
@@ -258,15 +262,18 @@ void valSelect() {
       delay(BUTTON_DELAY);
       switch (screenIndex) {
         case 0:
-          valEditor(ValSelect::LENGTH);
+          
           break;
         case 1:
-          valEditor(ValSelect::RADIUS);
+          
           break;
         case 2:
-          valEditor(ValSelect::INDUCTANCE);
+          
           break;
         case 3:
+
+          break;
+        case 4:
           task = Tasks::ConfirmScreen;
           return;
       }
@@ -275,7 +282,7 @@ void valSelect() {
     // Read Encoder
     long reNewPosition = encoder.read() / 4;
     int16_t dir = reNewPosition - reOldPosition;
-    if (dir > 0 && screenIndex < 3) {
+    if (dir > 0 && screenIndex < 4) {
       screenIndex += 1;
       screenChange = true;
     } else if (dir < 0 && screenIndex > 0) {
@@ -286,27 +293,6 @@ void valSelect() {
 
     delay(1);
   }
-}
-
-void valEditor(ValSelect val) {
-  lcd.setCursor(0,1);
-  lcd.cursor_on();
-  lcd.blink_on();
-    switch(val) {
-      case ValSelect::LENGTH:
-        uint8_t size = solenoid.lengthString().length();
-        
-      break;
-      case ValSelect::RADIUS:
-      
-      break;
-      case ValSelect::INDUCTANCE:
-      
-      break;
-      case ValSelect::GAUGE:
-      
-      break;
-    }
 }
 
 /*
