@@ -34,6 +34,7 @@
 // Misc constants
 #define VERSION "V1.0"
 #define BUTTON_DELAY 200
+#define CARRIAGE_OFFSET 
 
 enum Tasks {
   ChoosePreset,
@@ -45,10 +46,6 @@ enum Tasks {
 
 // Variables
 Tasks task = Tasks::ChoosePreset;
-uint32_t length = 500; // cm * 100
-uint32_t inductance = 4000; // mH * 100
-uint32_t radius = 50; // cm * 100
-uint32_t numTurns = 0;
 
 // Define LCD
 LiquidCrystal_I2C lcd(0x27, 16, 2);
@@ -62,6 +59,8 @@ Solenoid solenoid = Solenoid();
 // Function definition
 void choosePreset();
 void valSelect();
+void confirmScreen();
+void spin();
 String formatVal(uint32_t, uint32_t);
 uint32_t valEditor(uint32_t, uint32_t);
 
@@ -124,10 +123,28 @@ void loop() {
   */
   switch (task) {
     case Tasks::ChoosePreset:
+      #if DEBUG
+        Serial.println("Current Task: choosePreset");
+      #endif
       choosePreset();
       break;
     case Tasks::ValEdit:
+      #if DEBUG
+        Serial.println("Current Task: valSelect");
+      #endif
       valSelect();
+      break;
+    case Tasks::ConfirmScreen:
+      #if DEBUG
+        Serial.println("Current Task: confirmScreen");
+      #endif
+      confirmScreen();
+      break;
+    case Tasks::Spin:
+      #if DEBUG
+        Serial.println("Current Task: spin");
+      #endif
+      spin();
       break;
     default:
       task = Tasks::ChoosePreset;
@@ -384,7 +401,6 @@ uint32_t valEditor(uint32_t num, uint32_t max) {
   }
 }
 
-
 void confirmScreen() {
   uint8_t cursor_idx = 0;
   long reOldPosition = encoder.read() / 4;
@@ -425,6 +441,34 @@ void confirmScreen() {
     // Stability delay
     delay(1);
   } 
+}
+
+void spin() {
+
+}
+
+void zeroCarriage() {
+
+}
+
+void pauseSpin() {
+
+}
+
+void motorFault(String motorName) {
+  // Sleep both motors
+  digitalWrite(SS_SLEEP_PIN, LOW);
+  digitalWrite(CC_SLEEP_PIN, LOW);
+
+  // Error message
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("!!MOTOR  FAULT!!");
+  lcd.setCursor(0, 1);
+  lcd.print(motorName + " Motor");
+  
+  // Infinite loop till restart
+  while (true) {delay(1);}
 }
 
 
