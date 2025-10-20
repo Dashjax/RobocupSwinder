@@ -452,10 +452,21 @@ void zeroCarriage() {
 }
 
 void pauseSpin() {
+  uint8_t cursorIndex = 0;
+  long reOldPosition = encoder.read() / 4;
 
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Paused");
+  lcd.setCursor(0, 1);
+  lcd.print("Resume Restart");
 }
 
 void motorFault(String motorName) {
+  #if DEBUG
+    Serial.println("Motor fault on motor: " + motorName);
+  #endif
+
   // Sleep both motors
   digitalWrite(SS_SLEEP_PIN, LOW);
   digitalWrite(CC_SLEEP_PIN, LOW);
