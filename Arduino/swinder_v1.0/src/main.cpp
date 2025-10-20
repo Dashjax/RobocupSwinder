@@ -62,6 +62,8 @@ Solenoid solenoid = Solenoid();
 // Function definition
 void choosePreset();
 void valSelect();
+String formatVal(uint32_t, uint32_t);
+uint32_t valEditor(uint32_t, uint32_t);
 
 
 void setup() {
@@ -226,19 +228,19 @@ void valSelect() {
           lcd.setCursor(0, 0);
           lcd.print("Length (cm)");
           lcd.setCursor(0, 1);
-          lcd.print(solenoid.lengthString());
+          lcd.print(formatVal(solenoid.getLength(), MAX_LENGTH));
           break;
         case 1: // Radius (cm)
           lcd.setCursor(0, 0);
           lcd.print("Radius (cm)");
           lcd.setCursor(0, 1);
-          lcd.print(solenoid.radiusString());
+          lcd.print(formatVal(solenoid.getRadius(), MAX_RADIUS));
           break;
         case 2: // Inductance (mH)
           lcd.setCursor(0, 0);
           lcd.print("Inductance (mH)");
           lcd.setCursor(0, 1);
-          lcd.print(solenoid.inductanceString());
+          lcd.print(formatVal(solenoid.getInductance(), MAX_INDUCTANCE));
           break;
         case 3:
           lcd.setCursor(0, 0);
@@ -249,7 +251,7 @@ void valSelect() {
         case 4: // Confirmation Screen
           lcd.setCursor(0, 0);
           lcd.print("Turns: ");
-          lcd.print(solenoid.turnsString());
+          lcd.print(String(solenoid.getTurns()));
           lcd.setCursor(0, 1);
           lcd.print("Confirm");
           break;
@@ -261,22 +263,23 @@ void valSelect() {
     if (digitalRead(RE_BUTTON_PIN) == LOW) {
       delay(BUTTON_DELAY);
       switch (screenIndex) {
-        case 0:
-          
+        case 0: // Length
+          solenoid.setLength(valEditor(solenoid.getLength(), MAX_LENGTH));
           break;
-        case 1:
-          
+        case 1: // Radius
+          solenoid.setRadius(valEditor(solenoid.getRadius(), MAX_RADIUS));
           break;
-        case 2:
-          
+        case 2: // Inductance
+          solenoid.setInductance(valEditor(solenoid.getInductance(), MAX_INDUCTANCE));
           break;
-        case 3:
-
+        case 3: // Gauge
+          solenoid.setGauge(valEditor(solenoid.getGauge(), MAX_GAUGE));
           break;
-        case 4:
+        case 4: // Turns
           task = Tasks::ConfirmScreen;
           return;
       }
+      screenChange = true;
     }
 
     // Read Encoder
@@ -291,6 +294,92 @@ void valSelect() {
     }
     reOldPosition = reNewPosition;
 
+    delay(1);
+  }
+}
+
+uint32_t valEditor(uint32_t num, uint32_t max) {
+  uint32_t scaler = 1;
+  uint8_t maxLength = String(max).length() + 1;
+  uint8_t cursor_idx = maxLength - 1;
+  long reOldPosition = encoder.read() / 4;
+  bool editingDigit = false;
+  bool screenChange = true;
+
+  
+  lcd.setCursor(11, 1);
+  lcd.print("Done");
+  lcd.setCursor(cursor_idx, 1);
+  lcd.cursor_on();
+
+  while (true) {
+    
+    // Read button
+    if (digitalRead(RE_BUTTON_PIN) == LOW) {
+      delay(BUTTON_DELAY);
+      if (cursor_idx == 11) {
+        lcd.cursor_off();
+        lcd.blink_off();
+        return num;
+      } else {
+        editingDigit = !editingDigit;
+        if (editingDigit) {
+          lcd.blink_on();
+        } else {
+          lcd.blink_off();
+        }
+      }
+    }
+
+    // Read Encoder
+    long reNewPosition = encoder.read() / 4;
+    int16_t dir = reNewPosition - reOldPosition;
+    if (editingDigit) { // Editing digit
+      if (dir > 0 && num + scaler <= max) {
+        num += scaler;
+        screenChange = true;
+      } else if (dir < 0 && num - scaler >= 0) {
+        num -= scaler;
+        screenChange = true;
+      }
+    } else { // Selecting digit
+      if (dir > 0 && cursor_idx < maxLength - 1) {
+        cursor_idx++;
+        // Skip .
+        if (cursor_idx == maxLength - 3) {
+          cursor_idx++;
+        }
+        // Jump to done
+        if (cursor_idx == maxLength) {
+          cursor_idx = 11;
+        }
+        scaler /= 10;
+        screenChange = true;
+      } else if (dir < 0 && cursor_idx > 0) {
+        cursor_idx--;
+        // Skip .
+        if (cursor_idx == maxLength - 3) {
+          cursor_idx--;
+        }
+        // Jump from done
+        if (cursor_idx == 10) {
+          cursor_idx = maxLength - 1;
+        }
+        scaler *= 10;
+        screenChange = true;
+      }
+    }
+    reOldPosition = reNewPosition;
+
+    // Update screen
+    if (screenChange) {
+      lcd.setCursor(0, 1);
+      lcd.print(formatVal(num, max));
+      lcd.setCursor(cursor_idx, 1);
+      screenChange = false;
+    }
+    
+    // Stability delay
     delay(1);
   }
 }
@@ -310,4 +399,33 @@ void startupAnimation() {
   lcd.setCursor(5, 1);
   lcd.print(VERSION);
   delay(500);
+}
+
+// Assumes 2 decimal place precision
+String formatVal(uint32_t num, uint32_t max) {
+  uint8_t maxLength = String(max).length() + 1; // Cannot be greater than 10
+  String returnString = "";
+  String numberString = String(num);
+  
+  // Add leading zeros to match length
+  for (size_t i = 0; i < maxLength - numberString.length(); i++) {
+    if (int(i) == maxLength - 3) {
+        returnString += ".";
+    } else {
+        returnString += "0";
+    }
+  }
+  
+  // Add actual value
+  // Short value case
+  if (numberString.length() < 3) {
+    returnString += numberString;
+    return returnString;
+  }
+
+  // Split case
+  returnString += numberString.substring(0, numberString.length() - 2);
+  returnString += ".";
+  returnString += numberString.substring(numberString.length() - 2);
+  return returnString;
 }

@@ -6,6 +6,7 @@
 #define MAX_LENGTH 2000 // 0.2m stored with 0.01cm precision. Divide by 10000
 #define MAX_INDUCTANCE 4000000 // 40H stored with 0.01mH precision. Divide by 100000
 #define MAX_RADIUS 500 // 0.005m stored with 0.01cm precision. Divide by 10000
+#define MAX_GAUGE 12 // Semi arbitrary value representing number of gauge types
 
 #define UT_SCALING_FACTOR 100000 // 10^5
 #define K 394784 // K = 4 * pi^2 * 10^-7 = ~394784 * 10^-11 for ~1.76 * 10^12 error
@@ -24,6 +25,7 @@ enum Preset {
     Debug,
 };
 
+
 enum WireGauge { // Diameter, divide by 1000000 to get m
     AWG18 = 1020, // 1.020mm
     AWG19 = 910, // 0.910mm
@@ -39,6 +41,7 @@ enum WireGauge { // Diameter, divide by 1000000 to get m
     AWG29 = 290, // 0.290mm
     AWG30 = 254, // 0.254mm
 };
+
 
 class Solenoid {
 public:
@@ -120,11 +123,25 @@ public:
     SolenoidError setGauge(WireGauge gauge);
 
     /**
+     * @brief Setter for solenoid wire gauge using gauge/index value
+     * 
+     * @returns VAL_ERROR if input value is outside expected range
+     */
+    SolenoidError setGauge(uint32_t gauge);
+
+    /**
      * @brief Updates all values of solenoid to predefined presets
      * 
      * @param preset selected preset
      */
     void setPreset(Preset preset);
+
+    /**
+     * @brief Provides a string format for gauge
+     * 
+     * @returns String representation of the gauge
+     */
+    String gaugeString();
 
     /**
      * @brief Returns the number of turns that can fit in one pass across the solenoid
@@ -133,40 +150,7 @@ public:
      */
     uint32_t turnsPerPass();
 
-    /**
-     * @brief Returns the string formatted version of length in cm.
-     * 
-     * @returns length as string
-     */
-    String lengthString();
 
-    /**
-     * @brief Returns the string formatted version of radius in cm.
-     * 
-     * @returns radius as string
-     */
-    String radiusString();
-
-    /**
-     * @brief Returns the string formatted version of inductance in mH.
-     * 
-     * @returns inductance as string
-     */
-    String inductanceString();
-
-    /**
-     * @brief Returns the string formatted version of wire gauge.
-     * 
-     * @returns gauge as string
-     */
-    String gaugeString();
-
-    /**
-     * @brief Returns the string formatted version of turn count
-     * 
-     * @returns turn count string
-     */
-    String turnsString();
 
 private:
     /**
@@ -175,15 +159,6 @@ private:
      * Equation: sqrt((inductance * length) / (R^2 * K))
      */
     void updateTurns();
-
-    /**
-     * @brief General format from converting int values to strings
-     * 
-     * @param num int to be formatted
-     * @param max maximum value num can be
-     * @returns string format of given value
-     */
-    String formatVal(uint32_t num, uint32_t max);
 
     uint32_t _length = 0;
     uint32_t _radius = 0;

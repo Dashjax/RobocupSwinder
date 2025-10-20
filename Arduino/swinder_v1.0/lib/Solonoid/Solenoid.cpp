@@ -37,6 +37,64 @@ SolenoidError Solenoid::setGauge(WireGauge gauge) {
     return SolenoidError::NO_ERROR;
 }
 
+SolenoidError Solenoid::setGauge(uint32_t gauge) {
+    switch (gauge) {
+        case 0:
+        case 1020:
+            this->_gauge = WireGauge::AWG18;
+            return SolenoidError::NO_ERROR;
+        case 1:
+        case 910:
+            this->_gauge = WireGauge::AWG19;
+            return SolenoidError::NO_ERROR;
+        case 2:
+        case 810:
+            this->_gauge = WireGauge::AWG20;
+            return SolenoidError::NO_ERROR;
+        case 3:
+        case 720:
+            this->_gauge = WireGauge::AWG21;
+            return SolenoidError::NO_ERROR;
+        case 4:
+        case 643:
+            this->_gauge = WireGauge::AWG22;
+            return SolenoidError::NO_ERROR;
+        case 5:
+        case 574:
+            this->_gauge = WireGauge::AWG23;
+            return SolenoidError::NO_ERROR;
+        case 6:
+        case 511:
+            this->_gauge = WireGauge::AWG24;
+            return SolenoidError::NO_ERROR;
+        case 7:
+        case 450:
+            this->_gauge = WireGauge::AWG25;
+            return SolenoidError::NO_ERROR;
+        case 8:
+        case 404:
+            this->_gauge = WireGauge::AWG26;
+            return SolenoidError::NO_ERROR;
+        case 9:
+        case 361:
+            this->_gauge = WireGauge::AWG27;
+            return SolenoidError::NO_ERROR;
+        case 10:
+        case 320:
+            this->_gauge = WireGauge::AWG28;
+            return SolenoidError::NO_ERROR;
+        case 11:
+        case 290:
+            this->_gauge = WireGauge::AWG29;
+            return SolenoidError::NO_ERROR;
+        case 12:
+        case 254:
+            this->_gauge = WireGauge::AWG30;
+            return SolenoidError::NO_ERROR;
+    }
+    return SolenoidError::VALUE_ERROR;
+}
+
 uint32_t Solenoid::getLength() {
     return _length;
 }
@@ -106,21 +164,6 @@ uint32_t Solenoid::turnsPerPass() {
     return (_length / _gauge) * 100;
 }
 
-String Solenoid::lengthString() {
-    return this->formatVal(_length, MAX_LENGTH);
-}
-
-String Solenoid::radiusString() {
-    return this->formatVal(_radius, MAX_RADIUS);
-}
-
-String Solenoid::inductanceString() {
-    return this->formatVal(_inductance, MAX_INDUCTANCE);
-}
-
-String Solenoid::turnsString() {
-    return String(this->getTurns());
-}
 
 String Solenoid::gaugeString() {
     switch(_gauge) {
@@ -141,35 +184,8 @@ String Solenoid::gaugeString() {
     }
 }
 
+
 // PRIVATE
-String Solenoid::formatVal(uint32_t num, uint32_t max) {
-  uint8_t maxLength = String(max).length() + 1; // Cannot be greater than 10
-  String returnString = "";
-  String numberString = String(num);
-  
-  // Add leading zeros to match length
-  for (size_t i = 0; i < maxLength - numberString.length(); i++) {
-    if (i == maxLength - 3) {
-        returnString += ".";
-    } else {
-        returnString += "0";
-    }
-  }
-  
-  // Add actual value
-  // Short value case
-  if (numberString.length() < 3) {
-    returnString += numberString;
-    return returnString;
-  }
-
-  // Split case
-  returnString += numberString.substring(0, numberString.length() - 2);
-  returnString += ".";
-  returnString += numberString.substring(numberString.length() - 2);
-  return returnString;
-}
-
 
 void Solenoid::updateTurns() {
     this->_numTurns = round(sqrt((_inductance * _length) / (_radius * _radius * K))) * UT_SCALING_FACTOR;
