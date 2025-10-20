@@ -384,6 +384,50 @@ uint32_t valEditor(uint32_t num, uint32_t max) {
   }
 }
 
+
+void confirmScreen() {
+  uint8_t cursor_idx = 0;
+  long reOldPosition = encoder.read() / 4;
+
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Begin Process?");
+  lcd.setCursor(0, 1);
+  lcd.print("Y/N");
+  lcd.setCursor(cursor_idx, 1);
+  lcd.cursor_on();
+  lcd.blink_on();
+
+  while (true) {
+    // Read button
+    if (digitalRead(RE_BUTTON_PIN) == LOW) {
+      if (cursor_idx == 0) {
+        task = Tasks::Spin;
+        return;
+      } else {
+        task = Tasks::ValEdit;
+        return;
+      }
+    }
+
+    // Read encoder
+    long reNewPosition = encoder.read() / 4;
+    int16_t dir = reNewPosition - reOldPosition;
+    if (dir > 0 && cursor_idx == 0) {
+      cursor_idx = 2;
+    } else if (dir < 0 && cursor_idx == 2) {
+      cursor_idx = 0;
+    }
+    reOldPosition = reNewPosition;
+
+    lcd.setCursor(cursor_idx, 1);
+
+    // Stability delay
+    delay(1);
+  } 
+}
+
+
 /*
   Simple animation to play at startup
   Total delay: 1600ms
