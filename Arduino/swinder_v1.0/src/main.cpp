@@ -12,7 +12,7 @@
 #define SS_FAULT_PIN 30
 #define SS_SLEEP_PIN 37
 // Set SS direction
-#define SS_DIR_SET 0
+#define SS_DIR_SET 0 // This should be used as true for clockwise, false for counterclockwise
 
 // Carriage control motor
 #define CC_STEP_PIN 39
@@ -20,7 +20,7 @@
 #define CC_FAULT_PIN 29
 #define CC_SLEEP_PIN 40
 // Set CC direction
-#define CC_DIR_SET 0
+#define CC_DIR_SET 0 // This should be used as true for forwards, false for backwards
 
 // Rotary encoder
 #define RE_BUTTON_PIN 21
@@ -34,7 +34,9 @@
 // Misc constants
 #define VERSION "V1.0"
 #define BUTTON_DELAY 200
-#define CARRIAGE_OFFSET 
+#define CARRIAGE_OFFSET 500 // 0.5 cm; SF = 
+#define PADDING 5 // Potentially needed error correction value to add/subtract from the start and end; 0.001 accuracy
+#define MOTOR_DELAY 1
 
 enum Tasks {
   ChoosePreset,
@@ -46,6 +48,13 @@ enum Tasks {
 
 // Variables
 Tasks task = Tasks::ChoosePreset;
+
+// Stepper Values
+#define SS_STEPS_PER_REVOLUTION 200 // Whole steps
+#define CC_STEPS_PER_REVOLUTION 400 // Half steps
+#define DISTANCE_PER_REVOLUTION 800 // 0.8 cm of carriage travel; SF = 
+#define DISTANCE_PER_STEP 2 // 0.002 cm of carriage travel; SF = 
+
 
 // Define LCD
 LiquidCrystal_I2C lcd(0x27, 16, 2);
@@ -61,6 +70,13 @@ void choosePreset();
 void valSelect();
 void confirmScreen();
 void spin();
+void zeroCarriage();
+void motorFault(String);
+void stepCC();
+void stepSS();
+void stepBoth();
+void pauseSpin();
+void completionScreen();
 String formatVal(uint32_t, uint32_t);
 uint32_t valEditor(uint32_t, uint32_t);
 
@@ -145,6 +161,12 @@ void loop() {
         Serial.println("Current Task: spin");
       #endif
       spin();
+      break;
+    case Tasks::End:
+      #if DEBUG
+        Serial.println("Current Task: end");
+      #endif
+      completionScreen();
       break;
     default:
       task = Tasks::ChoosePreset;
@@ -444,22 +466,196 @@ void confirmScreen() {
 }
 
 void spin() {
+  // Start by zeroing carriage
+  zeroCarriage();
+  
+  // Calculate necessary values
+  const uint32_t SS_STEPS = solenoid.getTurns() * SS_STEPS_PER_REVOLUTION;
+  const uint32_t CC_DISTANCE_PER_REVOLUTION = solenoid.getGauge() / DISTANCE_PER_STEP; // TODO
+  const uint32_t SS_STEP_PER_CC_STEP = 0; // TODO
 
+  uint32_t stepCount = 0; // Step count
+  uint32_t subStepCount = 0; // Specifically to time carriage steps to avoid costly mod ops
+  int32_t carriagePosition = 0; // Should be zero after zeroing; 0.001 cm accuracy
+  bool direction = true; // True = forward
+  uint8_t oldPercentComplete = 0;
+
+  // Wake CC Motor
+  digitalWrite(CC_SLEEP_PIN, HIGH);
+  delay(20);
+
+  // Set starting directions
+  digitalWrite(CC_DIR_PIN, CC_DIR_SET);
+
+  // Apply starting offset
+  while (carriagePosition < CARRIAGE_OFFSET + PADDING) {
+    // Check for motor fault
+    if (digitalRead(CC_FAULT_PIN) == LOW) {
+      motorFault("CC");
+    }
+
+    stepCC();
+    carriagePosition += DISTANCE_PER_STEP;
+  }
+  // Set new offset position as 0 position
+  carriagePosition = 0;
+
+  // Wake SS motor
+  digitalWrite(SS_SLEEP_PIN, HIGH);
+  delay(20);
+
+  // Set starting dir
+  digitalWrite(SS_DIR_PIN, SS_DIR_SET);
+
+  // Setup Screen
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Percent Complete");
+  lcd.setCursor(0, 1);
+  lcd.print(String(oldPercentComplete) + "%");
+
+  while (stepCount < SS_STEPS) {
+    // Check for motor faults
+    if (digitalRead(CC_FAULT_PIN) == LOW) {
+      motorFault("CC");
+    }
+    if (digitalRead(SS_FAULT_PIN) == LOW) {
+      motorFault("SS");
+    }
+
+    // Read button
+    if (digitalRead(RE_BUTTON_PIN) == LOW) {
+      delay(BUTTON_DELAY);
+
+      pauseSpin();
+
+      // Reset display after pause
+      lcd.clear();
+      lcd.setCursor(0, 0);
+      lcd.print("Percent Complete");
+      lcd.setCursor(0, 1);
+      lcd.print(String(oldPercentComplete) + "%");
+    }
+
+    // Reverse carriage
+    if (carriagePosition > int(solenoid.getLength()) * 10 + PADDING) {
+      digitalWrite(CC_DIR_PIN, !CC_DIR_SET);
+      direction = true;
+    }
+    if (carriagePosition < PADDING) {
+      digitalWrite(CC_DIR_PIN, CC_DIR_SET);
+      direction = false;
+    }
+
+    // Step motor(s)
+    if (subStepCount == SS_STEP_PER_CC_STEP) {
+      stepBoth();
+      carriagePosition += (direction ? DISTANCE_PER_STEP : -DISTANCE_PER_STEP);
+      subStepCount = 0;
+    } else {
+      stepSS();
+    }
+
+    // Update counts
+    subStepCount++;
+    stepCount++;
+
+    // Update % completion
+    uint8_t newPercentComplete = (stepCount * 100) / SS_STEPS;
+    if (newPercentComplete != oldPercentComplete) {
+      lcd.setCursor(0, 1);
+      lcd.print(String(newPercentComplete) + "%");
+    }
+  }
+
+  task = Tasks::End;
+  return;
 }
 
 void zeroCarriage() {
+  // Setup Screen
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Zeroing...");
+  lcd.setCursor(0, 1);
+  lcd.print("Please Wait...");
 
+  // Wake Motor
+  digitalWrite(CC_SLEEP_PIN, HIGH);
+  delay(20);
+
+  // Set direction
+  digitalWrite(CC_DIR_PIN, !CC_DIR_SET);
+
+  while (true) {
+    // Check for fault
+    if (digitalRead(CC_FAULT_PIN) == LOW) {
+      motorFault("CC");
+    }
+
+    // Usual behavior is to check start limit switch, but allow manual zero as well for debugging
+    if (digitalRead(LS_START_PIN) == HIGH || digitalRead(RE_BUTTON_PIN) == LOW) {
+      lcd.clear();
+      lcd.setCursor(0, 0);
+      lcd.print("Zeroing Complete");
+      delay(BUTTON_DELAY);
+
+      return;
+    } else {
+      stepCC();
+    }
+  }
 }
 
 void pauseSpin() {
   uint8_t cursorIndex = 0;
   long reOldPosition = encoder.read() / 4;
 
+  // Sleep Motors
+  digitalWrite(CC_SLEEP_PIN, LOW);
+  digitalWrite(SS_SLEEP_PIN, LOW);
+
+  // Setup Screen
   lcd.clear();
   lcd.setCursor(0, 0);
   lcd.print("Paused");
   lcd.setCursor(0, 1);
-  lcd.print("Resume Restart");
+  lcd.print("Resume  Restart");
+  lcd.setCursor(cursorIndex, 1);
+  lcd.cursor_on();
+  lcd.blink_on();
+
+  while (true) {
+    // Read Button
+    if (digitalRead(RE_BUTTON_PIN) == LOW) {
+      delay(BUTTON_DELAY);
+      lcd.blink_off();
+      lcd.cursor_off();
+      if (cursorIndex == 0) {
+        // Wake motors and return
+        digitalWrite(CC_SLEEP_PIN, HIGH);
+        digitalWrite(SS_SLEEP_PIN, HIGH);
+        return;
+      } else {
+        // Return to value editor
+        task = Tasks::ValEdit;
+        return;
+      }
+    }
+
+    // Read encoder
+    long reNewPosition = encoder.read() / 4;
+    int16_t dir = reNewPosition - reOldPosition;
+    if (dir > 0 && cursorIndex == 0) {
+      cursorIndex = 8;
+    } else if (dir < 0 && cursorIndex == 8) {
+      cursorIndex = 0;
+    }
+    reOldPosition = reNewPosition;
+
+    // Stability delay
+    delay(1);
+  }
 }
 
 void motorFault(String motorName) {
@@ -482,6 +678,52 @@ void motorFault(String motorName) {
   while (true) {delay(1);}
 }
 
+// Step carriage control motor one step
+void stepCC() {
+  digitalWrite(CC_STEP_PIN, HIGH);
+  delay(MOTOR_DELAY);
+  digitalWrite(CC_STEP_PIN, LOW);
+  delay(MOTOR_DELAY);
+}
+
+// Step solenoid spin motor one step
+void stepSS() {
+  digitalWrite(SS_STEP_PIN, HIGH);
+  delay(MOTOR_DELAY);
+  digitalWrite(SS_STEP_PIN, LOW);
+  delay(MOTOR_DELAY);
+}
+
+// Combined step function to eliminate out of sync steps and stuttering
+void stepBoth() {
+  digitalWrite(CC_STEP_PIN, HIGH);
+  digitalWrite(SS_STEP_PIN, HIGH);
+  delay(MOTOR_DELAY);
+  digitalWrite(CC_STEP_PIN, LOW);
+  digitalWrite(SS_STEP_PIN, LOW);
+  delay(MOTOR_DELAY);
+}
+
+void completionScreen() {
+  // Setup Screen
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Completed!");
+  lcd.setCursor(0, 1);
+  lcd.print("Press to restart");
+
+  while (true) {
+    // Read button
+    if (digitalRead(RE_BUTTON_PIN) == LOW) {
+      delay(BUTTON_DELAY);
+      
+      task = Tasks::ChoosePreset;
+      return;
+    }
+
+    delay(1);
+  }
+}
 
 /*
   Simple animation to play at startup

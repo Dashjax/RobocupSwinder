@@ -26,7 +26,7 @@ enum Preset {
 };
 
 
-enum WireGauge { // Diameter, divide by 1000000 to get m
+enum WireGauge { // Diameter, divide by 1000000 to get m; SF 10^-6
     AWG18 = 1020, // 1.020mm
     AWG19 = 910, // 0.910mm
     AWG20 = 810, // 0.810mm

@@ -188,5 +188,5 @@ String Solenoid::gaugeString() {
 // PRIVATE
 
 void Solenoid::updateTurns() {
-    this->_numTurns = round(sqrt((_inductance * _length) / (_radius * _radius * K))) * UT_SCALING_FACTOR;
+    this->_numTurns = round(sqrt((_inductance * _length) / (_radius * _radius * K)) * UT_SCALING_FACTOR);
 }
