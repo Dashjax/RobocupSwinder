@@ -125,6 +125,16 @@ void setup() {
   #if !DEBUG
     startupAnimation();
   #endif
+  #if DEBUG
+    // Math checks
+    solenoid.setPreset(Preset::Debug);
+    Serial.println("Length: " + String(solenoid.getLength()) + " Formatted: " + formatVal(solenoid.getLength(), MAX_LENGTH));
+    Serial.println("Radius: " + String(solenoid.getRadius()) + " Formatted: " + formatVal(solenoid.getRadius(), MAX_RADIUS));
+    Serial.println("Inductance: " + String(solenoid.getInductance()) + " Formatted: " + formatVal(solenoid.getInductance(), MAX_INDUCTANCE));
+    Serial.println("Gauge: " + solenoid.gaugeString());
+    Serial.println("Num Turns: " + String(solenoid.getTurns()));
+    Serial.println("Expected Values: L = 1234, 12.34 : R = 123, 1.23 : I = 1234567, 12345.67 : Gauge = AWG24 : Num Turns = 50504");
+  #endif
 }
 
 void loop() {
