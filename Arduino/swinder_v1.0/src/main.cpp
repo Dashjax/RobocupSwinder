@@ -36,7 +36,7 @@
 #define BUTTON_DELAY 200
 #define CARRIAGE_OFFSET 500 // 0.5 cm; SF = 
 #define PADDING 5 // Potentially needed error correction value to add/subtract from the start and end; 0.001 accuracy
-#define MOTOR_DELAY 1
+#define MOTOR_DELAY 800
 
 enum Tasks {
   ChoosePreset,
@@ -79,6 +79,7 @@ void pauseSpin();
 void completionScreen();
 String formatVal(uint32_t, uint32_t);
 uint32_t valEditor(uint32_t, uint32_t);
+WireGauge gaugeEditor(WireGauge);
 
 
 void setup() {
@@ -322,12 +323,13 @@ void valSelect() {
           solenoid.setInductance(valEditor(solenoid.getInductance(), MAX_INDUCTANCE));
           break;
         case 3: // Gauge
-          solenoid.setGauge(valEditor(solenoid.getGauge(), MAX_GAUGE));
+          solenoid.setGauge(gaugeEditor(solenoid.getGauge()));
           break;
         case 4: // Turns
           task = Tasks::ConfirmScreen;
           return;
       }
+      reOldPosition = encoder.read() / 4;
       screenChange = true;
     }
 
@@ -365,7 +367,7 @@ uint32_t valEditor(uint32_t num, uint32_t max) {
     
     // Read button
     if (digitalRead(RE_BUTTON_PIN) == LOW) {
-      delay(BUTTON_DELAY);
+      delay(BUTTON_DELAY * 2);
       if (cursor_idx == 11) {
         lcd.cursor_off();
         lcd.blink_off();
@@ -392,7 +394,7 @@ uint32_t valEditor(uint32_t num, uint32_t max) {
         screenChange = true;
       }
     } else { // Selecting digit
-      if (dir > 0 && cursor_idx < maxLength - 1) {
+      if (dir > 0 && cursor_idx < maxLength) {
         cursor_idx++;
         // Skip .
         if (cursor_idx == maxLength - 3) {
@@ -401,8 +403,10 @@ uint32_t valEditor(uint32_t num, uint32_t max) {
         // Jump to done
         if (cursor_idx == maxLength) {
           cursor_idx = 11;
+        } else {
+          scaler /= 10;
         }
-        scaler /= 10;
+        
         screenChange = true;
       } else if (dir < 0 && cursor_idx > 0) {
         cursor_idx--;
@@ -412,9 +416,11 @@ uint32_t valEditor(uint32_t num, uint32_t max) {
         }
         // Jump from done
         if (cursor_idx == 10) {
-          cursor_idx = maxLength - 1;
+          cursor_idx = maxLength;
+        } else {
+          scaler *= 10;
         }
-        scaler *= 10;
+        
         screenChange = true;
       }
     }
@@ -430,6 +436,66 @@ uint32_t valEditor(uint32_t num, uint32_t max) {
     
     // Stability delay
     delay(1);
+  }
+}
+
+WireGauge gaugeEditor(WireGauge gauge) {
+  uint8_t cursorIndex = 4;
+  bool editingGauge = false;
+  bool screenUpdate = true;
+  long reOldPosition = encoder.read() / 4;
+
+  lcd.setCursor(11, 1);
+  lcd.print("Done");
+  lcd.setCursor(cursorIndex, 1);
+  lcd.cursor_on();
+
+  while (true) {
+    // Read button
+    if (digitalRead(RE_BUTTON_PIN) == LOW) {
+      delay(BUTTON_DELAY);
+      if (cursorIndex == 11) {
+        lcd.cursor_off();
+        lcd.blink_off();
+        return gauge;
+      } else {
+        editingGauge = !editingGauge;
+        if (editingGauge) {
+          lcd.blink_on();
+        } else {
+          lcd.blink_off();
+        }
+      }
+    }
+
+    long reNewPosition = encoder.read() / 4;
+    int16_t dir = reNewPosition - reOldPosition;
+    if (editingGauge) {
+      if (dir > 0 && gauge < MAX_GAUGE) {
+        gauge = static_cast<WireGauge>(gauge + 1);
+        screenUpdate = true;
+      } else if (dir < 0 && gauge > 0) {
+        gauge = static_cast<WireGauge>(gauge - 1);
+        screenUpdate = true;
+      }
+    } else {
+      if (dir > 0 && cursorIndex == 4) {
+        cursorIndex = 11;
+        screenUpdate = true;
+      } else if (dir < 0 && cursorIndex == 11) {
+        cursorIndex = 4;
+        screenUpdate = true;
+      }
+    }
+    reOldPosition = reNewPosition;
+
+    if (screenUpdate) {
+      lcd.setCursor(0, 1);
+      solenoid.setGauge(gauge);
+      lcd.print(solenoid.gaugeString());
+      lcd.setCursor(cursorIndex, 1);
+      screenUpdate = false;
+    }
   }
 }
 
@@ -449,6 +515,10 @@ void confirmScreen() {
   while (true) {
     // Read button
     if (digitalRead(RE_BUTTON_PIN) == LOW) {
+      delay(BUTTON_DELAY);
+      lcd.blink_off();
+      lcd.cursor_off();
+
       if (cursor_idx == 0) {
         task = Tasks::Spin;
         return;
@@ -481,8 +551,8 @@ void spin() {
   
   // Calculate necessary values
   const uint32_t SS_STEPS = solenoid.getTurns() * SS_STEPS_PER_REVOLUTION;
-  const uint32_t CC_DISTANCE_PER_REVOLUTION = solenoid.getGauge() / DISTANCE_PER_STEP; // TODO
-  const uint32_t SS_STEP_PER_CC_STEP = 0; // TODO
+  const uint32_t CC_DISTANCE_PER_REVOLUTION = (solenoid.gaugeDiameter() * 100) / DISTANCE_PER_STEP;
+  const uint32_t SS_STEP_PER_CC_STEP = (CC_STEPS_PER_REVOLUTION * 1000) / CC_DISTANCE_PER_REVOLUTION;
 
   uint32_t stepCount = 0; // Step count
   uint32_t subStepCount = 0; // Specifically to time carriage steps to avoid costly mod ops
@@ -524,6 +594,9 @@ void spin() {
   lcd.setCursor(0, 1);
   lcd.print(String(oldPercentComplete) + "%");
 
+  #if DEBUG
+    long startTime = micros();
+  #endif
   while (stepCount < SS_STEPS) {
     // Check for motor faults
     if (digitalRead(CC_FAULT_PIN) == LOW) {
@@ -550,11 +623,11 @@ void spin() {
     // Reverse carriage
     if (carriagePosition > int(solenoid.getLength()) * 10 + PADDING) {
       digitalWrite(CC_DIR_PIN, !CC_DIR_SET);
-      direction = true;
+      direction = false;
     }
     if (carriagePosition < PADDING) {
       digitalWrite(CC_DIR_PIN, CC_DIR_SET);
-      direction = false;
+      direction = true;
     }
 
     // Step motor(s)
@@ -571,11 +644,20 @@ void spin() {
     stepCount++;
 
     // Update % completion
+    
     uint8_t newPercentComplete = (stepCount * 100) / SS_STEPS;
     if (newPercentComplete != oldPercentComplete) {
       lcd.setCursor(0, 1);
       lcd.print(String(newPercentComplete) + "%");
+      oldPercentComplete = newPercentComplete;
     }
+    
+
+    #if DEBUG
+      long endTime = micros();
+      Serial.println("Loop Time: " + String(endTime - startTime) + "ms");
+      startTime = endTime;
+    #endif
   }
 
   task = Tasks::End;
@@ -691,27 +773,27 @@ void motorFault(String motorName) {
 // Step carriage control motor one step
 void stepCC() {
   digitalWrite(CC_STEP_PIN, HIGH);
-  delay(MOTOR_DELAY);
+  delayMicroseconds(MOTOR_DELAY);
   digitalWrite(CC_STEP_PIN, LOW);
-  delay(MOTOR_DELAY);
+  delayMicroseconds(MOTOR_DELAY);
 }
 
 // Step solenoid spin motor one step
 void stepSS() {
   digitalWrite(SS_STEP_PIN, HIGH);
-  delay(MOTOR_DELAY);
+  delayMicroseconds(MOTOR_DELAY);
   digitalWrite(SS_STEP_PIN, LOW);
-  delay(MOTOR_DELAY);
+  delayMicroseconds(MOTOR_DELAY);
 }
 
 // Combined step function to eliminate out of sync steps and stuttering
 void stepBoth() {
   digitalWrite(CC_STEP_PIN, HIGH);
   digitalWrite(SS_STEP_PIN, HIGH);
-  delay(MOTOR_DELAY);
+  delayMicroseconds(MOTOR_DELAY);
   digitalWrite(CC_STEP_PIN, LOW);
   digitalWrite(SS_STEP_PIN, LOW);
-  delay(MOTOR_DELAY);
+  delayMicroseconds(MOTOR_DELAY);
 }
 
 void completionScreen() {
@@ -759,7 +841,7 @@ String formatVal(uint32_t num, uint32_t max) {
   String numberString = String(num);
   
   // Add leading zeros to match length
-  for (size_t i = 0; i < maxLength - numberString.length(); i++) {
+  for (size_t i = 0; i < maxLength - numberString.length() - 1; i++) {
     if (int(i) == maxLength - 3) {
         returnString += ".";
     } else {
@@ -770,7 +852,7 @@ String formatVal(uint32_t num, uint32_t max) {
   // Add actual value
   // Short value case
   if (numberString.length() < 3) {
-    returnString += numberString;
+    returnString += "." + numberString;
     return returnString;
   }
 

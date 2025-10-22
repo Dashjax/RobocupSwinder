@@ -8,7 +8,7 @@
 #define MAX_RADIUS 500 // 0.005m stored with 0.01cm precision. Divide by 10000
 #define MAX_GAUGE 12 // Semi arbitrary value representing number of gauge types
 
-#define UT_SCALING_FACTOR 100000 // 10^5
+#define UT_SCALING_FACTOR 10 // 10^5
 #define K 394784 // K = 4 * pi^2 * 10^-7 = ~394784 * 10^-11 for ~1.76 * 10^12 error
 
 enum SolenoidError {
@@ -25,23 +25,21 @@ enum Preset {
     Debug,
 };
 
-
 enum WireGauge { // Diameter, divide by 1000000 to get m; SF 10^-6
-    AWG18 = 1020, // 1.020mm
-    AWG19 = 910, // 0.910mm
-    AWG20 = 810, // 0.810mm
-    AWG21 = 720, // 0.720mm
-    AWG22 = 643, // 0.643mm
-    AWG23 = 574, // 0.574mm
-    AWG24 = 511, // 0.511mm
-    AWG25 = 450, // 0.450mm
-    AWG26 = 404, // 0.404mm
-    AWG27 = 361, // 0.361mm
-    AWG28 = 320, // 0.320mm
-    AWG29 = 290, // 0.290mm
-    AWG30 = 254, // 0.254mm
+    AWG18 = 0, // 1.020mm
+    AWG19 = 1, // 0.910mm
+    AWG20 = 2, // 0.810mm
+    AWG21 = 3, // 0.720mm
+    AWG22 = 4, // 0.643mm
+    AWG23 = 5, // 0.574mm
+    AWG24 = 6, // 0.511mm
+    AWG25 = 7, // 0.450mm
+    AWG26 = 8, // 0.404mm
+    AWG27 = 9, // 0.361mm
+    AWG28 = 10, // 0.320mm
+    AWG29 = 11, // 0.290mm
+    AWG30 = 12, // 0.254mm
 };
-
 
 class Solenoid {
 public:
@@ -144,13 +142,18 @@ public:
     String gaugeString();
 
     /**
+     * @brief Returns real value of gauge diameter
+     * 
+     * @returns diameter with 0.001mm precision
+     */
+    uint32_t gaugeDiameter();
+
+    /**
      * @brief Returns the number of turns that can fit in one pass across the solenoid
      * 
      * @returns number of turns per pass
      */
     uint32_t turnsPerPass();
-
-
 
 private:
     /**
@@ -160,11 +163,11 @@ private:
      */
     void updateTurns();
 
-    uint32_t _length = 0;
-    uint32_t _radius = 0;
-    uint32_t _inductance = 0;
+    uint64_t _length = 0;
+    uint64_t _radius = 0;
+    uint64_t _inductance = 0;
     WireGauge _gauge = WireGauge::AWG24;
-    uint32_t _numTurns = 0;
+    uint64_t _numTurns = 0;
 };
 
 #endif

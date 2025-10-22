@@ -37,64 +37,6 @@ SolenoidError Solenoid::setGauge(WireGauge gauge) {
     return SolenoidError::NO_ERROR;
 }
 
-SolenoidError Solenoid::setGauge(uint32_t gauge) {
-    switch (gauge) {
-        case 0:
-        case 1020:
-            this->_gauge = WireGauge::AWG18;
-            return SolenoidError::NO_ERROR;
-        case 1:
-        case 910:
-            this->_gauge = WireGauge::AWG19;
-            return SolenoidError::NO_ERROR;
-        case 2:
-        case 810:
-            this->_gauge = WireGauge::AWG20;
-            return SolenoidError::NO_ERROR;
-        case 3:
-        case 720:
-            this->_gauge = WireGauge::AWG21;
-            return SolenoidError::NO_ERROR;
-        case 4:
-        case 643:
-            this->_gauge = WireGauge::AWG22;
-            return SolenoidError::NO_ERROR;
-        case 5:
-        case 574:
-            this->_gauge = WireGauge::AWG23;
-            return SolenoidError::NO_ERROR;
-        case 6:
-        case 511:
-            this->_gauge = WireGauge::AWG24;
-            return SolenoidError::NO_ERROR;
-        case 7:
-        case 450:
-            this->_gauge = WireGauge::AWG25;
-            return SolenoidError::NO_ERROR;
-        case 8:
-        case 404:
-            this->_gauge = WireGauge::AWG26;
-            return SolenoidError::NO_ERROR;
-        case 9:
-        case 361:
-            this->_gauge = WireGauge::AWG27;
-            return SolenoidError::NO_ERROR;
-        case 10:
-        case 320:
-            this->_gauge = WireGauge::AWG28;
-            return SolenoidError::NO_ERROR;
-        case 11:
-        case 290:
-            this->_gauge = WireGauge::AWG29;
-            return SolenoidError::NO_ERROR;
-        case 12:
-        case 254:
-            this->_gauge = WireGauge::AWG30;
-            return SolenoidError::NO_ERROR;
-    }
-    return SolenoidError::VALUE_ERROR;
-}
-
 uint32_t Solenoid::getLength() {
     return _length;
 }
@@ -152,7 +94,7 @@ void Solenoid::setPreset(Preset preset) {
             this->setLength((uint32_t) 1234); // 0.1234m
             this->setRadius((uint32_t) 123); // 0.0123m
             this->setInductance((uint32_t) 1234567); // 12.34567H
-            this->setGauge(WireGauge::AWG18);
+            this->setGauge(WireGauge::AWG24);
     }
 }
 
@@ -184,9 +126,28 @@ String Solenoid::gaugeString() {
     }
 }
 
+uint32_t Solenoid::gaugeDiameter() {
+    
+    switch (_gauge) { // Diameter, divide by 1000000 to get m; SF 10^-6
+        case WireGauge::AWG18: return 1020; // 1.020mm
+        case WireGauge::AWG19: return 910; // 0.910mm
+        case WireGauge::AWG20: return 810; // 0.810mm
+        case WireGauge::AWG21: return 720; // 0.720mm
+        case WireGauge::AWG22: return 643; // 0.643mm
+        case WireGauge::AWG23: return 574; // 0.574mm
+        case WireGauge::AWG24: return 511; // 0.511mm
+        case WireGauge::AWG25: return 450; // 0.450mm
+        case WireGauge::AWG26: return 404; // 0.404mm
+        case WireGauge::AWG27: return 361; // 0.361mm
+        case WireGauge::AWG28: return 320; // 0.320mm
+        case WireGauge::AWG29: return 290; // 0.290mm
+        case WireGauge::AWG30: return 254; // 0.254mm
+        default: return 0;
+    }
+}
 
 // PRIVATE
 
 void Solenoid::updateTurns() {
-    this->_numTurns = round(sqrt((_inductance * _length) / (_radius * _radius * K)) * UT_SCALING_FACTOR);
+    this->_numTurns = round(sqrt(((_inductance * _length * 100000000) / (_radius * _radius * K))) * UT_SCALING_FACTOR);
 }
