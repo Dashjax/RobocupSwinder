@@ -4,7 +4,8 @@
 #include <LiquidCrystal_I2C.h>
 
 // Debug mode
-#define DEBUG true
+// Enables serial
+#define DEBUG false
 
 // Solonoid spin motor
 #define SS_STEP_PIN 36
@@ -34,9 +35,9 @@
 // Misc constants
 #define VERSION "V1.0"
 #define BUTTON_DELAY 200
-#define CARRIAGE_OFFSET 500 // 0.5 cm; SF = 
+#define CARRIAGE_OFFSET 500 // 0.5 cm
 #define PADDING 5 // Potentially needed error correction value to add/subtract from the start and end; 0.001 accuracy
-#define MOTOR_DELAY 800
+#define MOTOR_DELAY 800 //ps
 
 enum Tasks {
   ChoosePreset,
@@ -52,8 +53,8 @@ Tasks task = Tasks::ChoosePreset;
 // Stepper Values
 #define SS_STEPS_PER_REVOLUTION 200 // Whole steps
 #define CC_STEPS_PER_REVOLUTION 400 // Half steps
-#define DISTANCE_PER_REVOLUTION 800 // 0.8 cm of carriage travel; SF = 
-#define DISTANCE_PER_STEP 2 // 0.002 cm of carriage travel; SF = 
+#define DISTANCE_PER_REVOLUTION 800 // 0.8 cm of carriage travel
+#define DISTANCE_PER_STEP 2 // 0.002 cm of carriage travel
 
 
 // Define LCD
@@ -186,7 +187,7 @@ void loop() {
 
 
 /*
-Select Preset Screen
+Select preset screen
 -Rotate Clockwise: Move Cursor Right
 -Rotate Counterclockwise: Move Cursor Left
 -Press: Select Preset
@@ -261,6 +262,12 @@ void choosePreset() {
   }
 }
 
+/*
+Value select Screen
+-Rotate Clockwise: Move to next value
+-Rotate Counterclockwise: Move to previous value
+-Press: Begin editing value
+*/
 void valSelect() {
   // Local vars
   uint8_t screenIndex = 0;
@@ -349,6 +356,17 @@ void valSelect() {
   }
 }
 
+/*
+Decimal value editing Screen
+While not editing:
+-Rotate Clockwise: Move cursor right
+-Rotate Counterclockwise: Move cursor left
+-Press: Begin editing digit or return if on 'Done'
+While editing:
+-Rotate Clockwise: Increase current digit by 1
+-Rotate Counterclockwise: Decrease current digit by 1
+-Press: Finish editing
+*/
 uint32_t valEditor(uint32_t num, uint32_t max) {
   uint32_t scaler = 1;
   uint8_t maxLength = String(max).length() + 1;
@@ -439,6 +457,17 @@ uint32_t valEditor(uint32_t num, uint32_t max) {
   }
 }
 
+/*
+Gauge editing Screen
+While not editing:
+-Rotate Clockwise: Move cursor right
+-Rotate Counterclockwise: Move cursor left
+-Press: Begin editing gauge or return if on 'Done'
+While editing:
+-Rotate Clockwise: Increase gauge by 1
+-Rotate Counterclockwise: Decrease gauge by 1
+-Press: Finish editing
+*/
 WireGauge gaugeEditor(WireGauge gauge) {
   uint8_t cursorIndex = 4;
   bool editingGauge = false;
@@ -499,6 +528,12 @@ WireGauge gaugeEditor(WireGauge gauge) {
   }
 }
 
+/*
+Confirmation screen
+-Rotate Clockwise: Move Cursor Right
+-Rotate Counterclockwise: Move Cursor Left
+-Press: Confirm Y/N
+*/
 void confirmScreen() {
   uint8_t cursor_idx = 0;
   long reOldPosition = encoder.read() / 4;
@@ -545,6 +580,10 @@ void confirmScreen() {
   } 
 }
 
+/*
+Major spin task
+-Press: Pauses
+*/
 void spin() {
   // Start by zeroing carriage
   zeroCarriage();
@@ -664,6 +703,7 @@ void spin() {
   return;
 }
 
+// Moves carriage towards 0 position till the start limit switch is hit
 void zeroCarriage() {
   // Setup Screen
   lcd.clear();
@@ -699,6 +739,12 @@ void zeroCarriage() {
   }
 }
 
+/*
+Pause screen
+-Rotate Clockwise: Move Cursor Right
+-Rotate Counterclockwise: Move Cursor Left
+-Press: Confirm Resume/Restart
+*/
 void pauseSpin() {
   uint8_t cursorIndex = 0;
   long reOldPosition = encoder.read() / 4;
@@ -750,6 +796,10 @@ void pauseSpin() {
   }
 }
 
+/*
+Motor fault screen
+Unresolvable error - requires restart
+*/
 void motorFault(String motorName) {
   #if DEBUG
     Serial.println("Motor fault on motor: " + motorName);
