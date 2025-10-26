@@ -514,6 +514,7 @@ void spin() {
   lcd.print(percent_complete);
   lcd.print("%");
 
+  long startTime = micros();
   while (num_step_coil > 0) { //Process loop
     //Check for motor fault
     
@@ -566,6 +567,10 @@ void spin() {
       lcd.print(percent_complete);
       lcd.print("%");
     }
+
+    long endTime = micros();
+    Serial.println("Loop Time: " + String(endTime - startTime) + "us");
+    startTime = endTime;
   }
 
   //Goes to completion screen to prompt to restart
