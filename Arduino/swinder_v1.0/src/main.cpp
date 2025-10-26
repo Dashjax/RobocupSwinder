@@ -809,7 +809,7 @@ void completionScreen() {
     if (digitalRead(RE_BUTTON_PIN) == LOW) {
       delay(BUTTON_DELAY);
       
-      task = Tasks::ChoosePreset;
+      task = Tasks::ValEdit;
       return;
     }
 
